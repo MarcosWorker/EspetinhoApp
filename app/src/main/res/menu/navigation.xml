@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_lista"
+        android:icon="@mipmap/ic_lista"
+        android:title="Espetinhos" />
+
+    <item
+        android:id="@+id/navigation_pedido"
+        android:icon="@mipmap/ic_fazer_pedido"
+        android:title="Pedidos" />
+
+    <item
+        android:id="@+id/navigation_comentarios"
+        android:icon="@mipmap/ic_comentarios"
+        android:title="Comentarios" />
+
+</menu>
