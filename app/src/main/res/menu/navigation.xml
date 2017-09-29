@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_lista"
+        android:id="@+id/navigation_cardapio"
         android:icon="@mipmap/ic_lista"
-        android:title="Espetinhos" />
+        android:title="Cardápio" />
 
     <item
         android:id="@+id/navigation_pedido"
@@ -14,6 +14,10 @@
     <item
         android:id="@+id/navigation_comentarios"
         android:icon="@mipmap/ic_comentarios"
-        android:title="Comentarios" />
+        android:title="Comentários" />
+    <item
+        android:id="@+id/navigation_local"
+        android:icon="@mipmap/ic_local"
+        android:title="Localização" />
 
 </menu>
