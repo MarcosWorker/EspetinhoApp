@@ -11,8 +11,8 @@
         app:showAsAction="always">
         <menu>
             <item
-                android:id="@+id/menu_config"
-                android:title="Configurações" />
+                android:id="@+id/menu_sair"
+                android:title="Sair" />
         </menu>
 
     </item>

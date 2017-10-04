@@ -1,17 +1,26 @@
-package br.com.forum.espetinhoapp;
+package br.com.forum.espetinhoapp.flow;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+
+import br.com.forum.espetinhoapp.R;
+import br.com.forum.espetinhoapp.flow.fragments.CardapioFragment;
+import br.com.forum.espetinhoapp.flow.fragments.ComentariosFragment;
+import br.com.forum.espetinhoapp.flow.fragments.LocalFragment;
+import br.com.forum.espetinhoapp.flow.fragments.PedidosFragment;
 
 public class MainActivity extends AppCompatActivity {
 
     private Toolbar myToolbar = null;
+    private FragmentTransaction fragmentTransaction = null;
+    private BottomNavigationView navigation = null;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -21,15 +30,27 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_cardapio:
                     myToolbar.setTitle("Cardápio");
+                    fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.content, new CardapioFragment());
+                    fragmentTransaction.commit();
                     return true;
                 case R.id.navigation_pedido:
                     myToolbar.setTitle("Pedidos");
+                    fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.content, new PedidosFragment());
+                    fragmentTransaction.commit();
                     return true;
                 case R.id.navigation_comentarios:
                     myToolbar.setTitle("Comentarios");
+                    fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.content, new ComentariosFragment());
+                    fragmentTransaction.commit();
                     return true;
                 case R.id.navigation_local:
                     myToolbar.setTitle("Localização");
+                    fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.content, new LocalFragment());
+                    fragmentTransaction.commit();
                     return true;
             }
             return false;
@@ -37,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
     };
 
+    @android.support.annotation.RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +70,12 @@ public class MainActivity extends AppCompatActivity {
         myToolbar.setNavigationIcon(R.mipmap.ic_launcher);
         setSupportActionBar(myToolbar);
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        //abre por default na tela do Cardapio
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.content, new CardapioFragment());
+        fragmentTransaction.commit();
+
+        navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
@@ -62,10 +89,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.menu_config:
-                Toast.makeText(this, "Em construção", Toast.LENGTH_SHORT).show();
-                myToolbar.setTitle("Configurações");
-                break;
+            case R.id.menu_sair:
+                finish();
         }
         return true;
     }
