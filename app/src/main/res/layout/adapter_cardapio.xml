@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp">
+
+        <ImageView
+            android:id="@+id/foto_cardapio"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@mipmap/ic_launcher"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/ic_add"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/bt_add_cardapio" />
+        <ImageButton
+            android:id="@+id/bt_remove_cardapio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/ic_remove"
+            android:layout_below="@id/bt_add_cardapio"
+            android:layout_alignLeft="@id/bt_add_cardapio"
+            android:layout_alignStart="@id/bt_add_cardapio"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:id="@+id/qtd_cardapio"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:gravity="center"
+            android:text="3"
+            android:textColor="#979595"
+            android:textSize="100dp"/>
+
+        <TextView
+            android:id="@+id/nome_cardapio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/foto_cardapio"
+            android:layout_marginTop="8dp"
+            android:text="Carne de sol com Queijo"
+            android:textColor="#000"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/preco_cardapio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/nome_cardapio"
+            android:layout_marginTop="8dp"
+            android:text="R$ 5.00"
+            android:textColor="#61932f"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/descricao_cardapio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/preco_cardapio"
+            android:layout_marginTop="8dp"
+            android:text="4 pedaços médios de carne de sol bovina com 4 pedaços médios de queijo de coalho"
+            android:textColor="#979595"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+</LinearLayout>
