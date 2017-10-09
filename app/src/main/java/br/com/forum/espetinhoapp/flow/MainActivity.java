@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +17,7 @@ import br.com.forum.espetinhoapp.flow.fragments.CardapioFragment;
 import br.com.forum.espetinhoapp.flow.fragments.ComentariosFragment;
 import br.com.forum.espetinhoapp.flow.fragments.LocalFragment;
 import br.com.forum.espetinhoapp.flow.fragments.PedidosFragment;
+import br.com.forum.espetinhoapp.model.adapter.AdapterCardapio;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -77,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
     }
 
     @Override

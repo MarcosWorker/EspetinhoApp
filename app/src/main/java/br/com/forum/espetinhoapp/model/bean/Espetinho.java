@@ -8,17 +8,12 @@ import io.realm.annotations.Required;
  * Created by Marco on 06/10/2017.
  */
 
-public class Espetinho extends RealmObject {
+public class Espetinho {
 
-    @PrimaryKey
     private long id;
-    @Required
     private String nome;
-    @Required
     private String descricao;
-    @Required
     private String dataPedido;
-    @Required
     private String dataEntrega;
     private int foto;
     private int qtd;

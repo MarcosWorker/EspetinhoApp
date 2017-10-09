@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -35,31 +36,30 @@ public class AdapterCardapio extends RecyclerView.Adapter<AdapterCardapio.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
 
         final Espetinho espetinho = espetinhos.get(position);
         holder.fotoEspetinho.setImageResource(espetinho.getFoto());
         holder.tvNome.setText(espetinho.getNome());
-        holder.tvPreco.setText("R$ "+espetinho.getPreco());
+        holder.tvPreco.setText("R$ " + espetinho.getPreco());
         holder.tvDescricao.setText(espetinho.getDescricao());
-        holder.tvQtd.setText(espetinho.getQtd());
         holder.btAddEspetinho.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                espetinho.setQtd(espetinho.getQtd()+1);
+                espetinho.setQtd(espetinho.getQtd() + 1);
+                holder.tvQtd.setText(String.valueOf(espetinho.getQtd()));
             }
         });
-
-        if(espetinho.getQtd()<=0){
-            holder.btRemoveEspetinho.setVisibility(View.INVISIBLE);
-        }else{
-            holder.btRemoveEspetinho.setVisibility(View.VISIBLE);
-        }
-
         holder.btRemoveEspetinho.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                espetinho.setQtd(espetinho.getQtd()-1);
+                if (espetinho.getQtd() <= 0) {
+                    Toast.makeText(view.getContext(), "Não existe pedido para esse item.", Toast.LENGTH_SHORT).show();
+                } else {
+                    espetinho.setQtd(espetinho.getQtd() - 1);
+                    holder.tvQtd.setText(String.valueOf(espetinho.getQtd()));
+                }
+
             }
         });
 
