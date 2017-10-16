@@ -75,6 +75,10 @@ public class AdapterCardapio extends RecyclerView.Adapter<AdapterCardapio.ViewHo
         return position;
     }
 
+    public List<Espetinho> cardapioAtual(){
+        return espetinhos;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView fotoEspetinho = null;
