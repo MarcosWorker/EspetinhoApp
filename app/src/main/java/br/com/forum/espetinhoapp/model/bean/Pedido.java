@@ -18,6 +18,8 @@ public class Pedido extends RealmObject {
     private String data;
     @Required
     private String hora;
+    @Required
+    private String mesa;
 
     public Pedido() {
     }
@@ -52,5 +54,13 @@ public class Pedido extends RealmObject {
 
     public void setHora(String hora) {
         this.hora = hora;
+    }
+
+    public String getMesa() {
+        return mesa;
+    }
+
+    public void setMesa(String mesa) {
+        this.mesa = mesa;
     }
 }

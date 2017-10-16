@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
@@ -44,6 +45,8 @@ public class CardapioFragment extends Fragment {
     private Calendar cal = null;
     private Date data_atual = null;
     private AlertDialog.Builder builder = null;
+    private EditText edt_mesa = null;
+    private LayoutInflater inflaterAlert = null;
 
     public CardapioFragment() {
         // Required empty public constructor
@@ -143,6 +146,10 @@ public class CardapioFragment extends Fragment {
 
         realm = Realm.getDefaultInstance();
 
+        edt_mesa = (EditText) view.findViewById(R.id.mesa_pedido);
+
+        inflaterAlert = getActivity().getLayoutInflater();
+
         recyclerView = (RecyclerView) view.findViewById(R.id.lista_cardapio);
         listarEspetinhos();
         adapterCardapio = new AdapterCardapio(espetinhos);
@@ -153,7 +160,7 @@ public class CardapioFragment extends Fragment {
         fab = (FloatingActionButton) view.findViewById(R.id.fab_cardapio);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 boolean vazio = true;
 
                 for (Espetinho espetinho : adapterCardapio.cardapioAtual()) {
@@ -166,16 +173,24 @@ public class CardapioFragment extends Fragment {
                     Toast.makeText(getContext(), "Não existe nada para pedir", Toast.LENGTH_SHORT).show();
                 } else {
 
-
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Dialog_Alert);
                     } else {
                         builder = new AlertDialog.Builder(getContext());
                     }
-                    builder.setTitle("Pedido")
-                            .setMessage("Tem certeza que quer enviar esse pedido?")
-                            .setPositiveButton("sim", new DialogInterface.OnClickListener() {
+
+                    builder.setView(inflaterAlert.inflate(R.layout.alert_pedido, null))
+                            .setPositiveButton("Enviar", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
+
+                                    StringBuilder descricao = new StringBuilder("Descrição : \n");
+                                    for (Espetinho espetinho : adapterCardapio.cardapioAtual()) {
+                                        descricao.append(espetinho.getNome())
+                                                .append(" - ")
+                                                .append(espetinho.getPreco())
+                                                .append("\n");
+                                    }
+
                                     dateFormat_hora = new SimpleDateFormat("HH:mm:ss");
                                     data = new Date();
 
@@ -183,29 +198,29 @@ public class CardapioFragment extends Fragment {
                                     cal.setTime(data);
                                     data_atual = cal.getTime();
 
-                                    realm.beginTransaction();
-                                    Pedido pedido = realm.createObject(Pedido.class); // Create a new object
-                                    StringBuilder descricao= new StringBuilder("Descrição : \n");
-                                    for (Espetinho espetinho:adapterCardapio.cardapioAtual()){
-                                        descricao.append(espetinho.getNome())
-                                                .append(" - ")
-                                                .append(espetinho.getPreco())
-                                                .append("\n");
-                                    }
-                                    pedido.setDescricao(descricao.toString());
-                                    pedido.setData(data_atual.toString());
-                                    pedido.setHora(dateFormat_hora.format(data_atual));
-                                    realm.commitTransaction();
+                                    if (edt_mesa.getText().equals("")) {
+                                        Toast.makeText(getContext(), "Pedido negado... Precisa digitar o numero da mesa.", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        realm.beginTransaction();
+                                        Pedido pedido = realm.createObject(Pedido.class); // Create a new object
+                                        pedido.setDescricao(descricao.toString());
+                                        pedido.setData(data_atual.toString());
+                                        pedido.setHora(dateFormat_hora.format(data_atual));
+                                        pedido.setMesa(edt_mesa.getText().toString());
+                                        realm.commitTransaction();
 
-                                    Toast.makeText(getContext(), "Pedido enviado", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), "Pedido enviado...", Toast.LENGTH_SHORT).show();
+                                    }
+
+
                                 }
                             })
-                            .setNegativeButton("não", new DialogInterface.OnClickListener() {
+                            .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     // do nothing
                                 }
                             })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setCancelable(false)
                             .show();
 
                 }
@@ -220,6 +235,12 @@ public class CardapioFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        realm.close();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
         realm.close();
     }
 

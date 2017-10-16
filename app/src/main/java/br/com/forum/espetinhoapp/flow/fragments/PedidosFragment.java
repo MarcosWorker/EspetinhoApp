@@ -8,11 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import br.com.forum.espetinhoapp.R;
+import io.realm.Realm;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class PedidosFragment extends Fragment {
+
+    private Realm realm=null;
 
 
     public PedidosFragment() {
