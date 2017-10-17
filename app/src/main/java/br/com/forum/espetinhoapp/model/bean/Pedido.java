@@ -11,7 +11,7 @@ import io.realm.annotations.Required;
 public class Pedido extends RealmObject {
 
     @PrimaryKey
-    private long id;
+    private String id;
     @Required
     private String descricao;
     @Required
@@ -20,15 +20,18 @@ public class Pedido extends RealmObject {
     private String hora;
     @Required
     private String mesa;
+    @Required
+    private String total;
+    private int status;// 0 - em aberto ######  1 - entregue
 
     public Pedido() {
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -62,5 +65,21 @@ public class Pedido extends RealmObject {
 
     public void setMesa(String mesa) {
         this.mesa = mesa;
+    }
+
+    public String getTotal() {
+        return total;
+    }
+
+    public void setTotal(String total) {
+        this.total = total;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

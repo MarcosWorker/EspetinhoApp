@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import br.com.forum.espetinhoapp.R;
 import br.com.forum.espetinhoapp.model.adapter.AdapterCardapio;
@@ -180,12 +181,19 @@ public class CardapioFragment extends Fragment {
                             .setPositiveButton("Enviar", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
 
+                                    double total = 0.0;
+
                                     StringBuilder descricao = new StringBuilder("Descrição : \n");
                                     for (Espetinho espetinho : adapterCardapio.cardapioAtual()) {
-                                        descricao.append(espetinho.getNome())
-                                                .append(" - ")
-                                                .append(espetinho.getPreco())
-                                                .append("\n");
+                                        if(espetinho.getQtd()>0){
+                                            descricao.append(espetinho.getQtd())
+                                                    .append(" ")
+                                                    .append(espetinho.getNome())
+                                                    .append(" - ")
+                                                    .append(espetinho.getPreco())
+                                                    .append("\n");
+                                            total = (espetinho.getQtd() * espetinho.getPreco()) + total;
+                                        }
                                     }
 
                                     dateFormat_hora = new SimpleDateFormat("HH:mm:ss");
@@ -197,16 +205,18 @@ public class CardapioFragment extends Fragment {
 
                                     edt_mesa = (EditText) viewAlert.findViewById(R.id.mesa_pedido);
 
-                                    if (edt_mesa.getText().toString().isEmpty() ) {
+                                    if (edt_mesa.getText().toString().isEmpty()) {
                                         Toast.makeText(getContext(), "Pedido negado... Precisa digitar o numero da mesa.", Toast.LENGTH_SHORT).show();
                                     } else {
-//                                        realm.beginTransaction();
-//                                        Pedido pedido = realm.createObject(Pedido.class); // Create a new object
-//                                        pedido.setDescricao(descricao.toString());
-//                                        pedido.setData(data_atual.toString());
-//                                        pedido.setHora(dateFormat_hora.format(data_atual));
-//                                        pedido.setMesa(edt_mesa.getText().toString());
-//                                        realm.commitTransaction();
+                                        realm.beginTransaction();
+                                        Pedido pedido = realm.createObject(Pedido.class, UUID.randomUUID().toString()); // Create a new object
+                                        pedido.setDescricao(descricao.toString());
+                                        pedido.setData(data_atual.toString());
+                                        pedido.setHora(dateFormat_hora.format(data_atual));
+                                        pedido.setMesa("Mesa "+edt_mesa.getText().toString());
+                                        pedido.setTotal("Total - R$ "+String.valueOf(total));
+                                        pedido.setStatus(0);
+                                        realm.commitTransaction();
 
                                         Toast.makeText(getContext(), "Pedido enviado...", Toast.LENGTH_SHORT).show();
                                     }
