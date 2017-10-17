@@ -46,7 +46,6 @@ public class CardapioFragment extends Fragment {
     private Date data_atual = null;
     private AlertDialog.Builder builder = null;
     private EditText edt_mesa = null;
-    private LayoutInflater inflaterAlert = null;
 
     public CardapioFragment() {
         // Required empty public constructor
@@ -146,10 +145,6 @@ public class CardapioFragment extends Fragment {
 
         realm = Realm.getDefaultInstance();
 
-        edt_mesa = (EditText) view.findViewById(R.id.mesa_pedido);
-
-        inflaterAlert = getActivity().getLayoutInflater();
-
         recyclerView = (RecyclerView) view.findViewById(R.id.lista_cardapio);
         listarEspetinhos();
         adapterCardapio = new AdapterCardapio(espetinhos);
@@ -173,13 +168,15 @@ public class CardapioFragment extends Fragment {
                     Toast.makeText(getContext(), "Não existe nada para pedir", Toast.LENGTH_SHORT).show();
                 } else {
 
+                    final View viewAlert = getActivity().getLayoutInflater().inflate(R.layout.alert_pedido, null);
+
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Dialog_Alert);
                     } else {
                         builder = new AlertDialog.Builder(getContext());
                     }
 
-                    builder.setView(inflaterAlert.inflate(R.layout.alert_pedido, null))
+                    builder.setView(viewAlert)
                             .setPositiveButton("Enviar", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
 
@@ -198,16 +195,18 @@ public class CardapioFragment extends Fragment {
                                     cal.setTime(data);
                                     data_atual = cal.getTime();
 
-                                    if (edt_mesa.getText().equals("")) {
+                                    edt_mesa = (EditText) viewAlert.findViewById(R.id.mesa_pedido);
+
+                                    if (edt_mesa.getText().toString().isEmpty() ) {
                                         Toast.makeText(getContext(), "Pedido negado... Precisa digitar o numero da mesa.", Toast.LENGTH_SHORT).show();
                                     } else {
-                                        realm.beginTransaction();
-                                        Pedido pedido = realm.createObject(Pedido.class); // Create a new object
-                                        pedido.setDescricao(descricao.toString());
-                                        pedido.setData(data_atual.toString());
-                                        pedido.setHora(dateFormat_hora.format(data_atual));
-                                        pedido.setMesa(edt_mesa.getText().toString());
-                                        realm.commitTransaction();
+//                                        realm.beginTransaction();
+//                                        Pedido pedido = realm.createObject(Pedido.class); // Create a new object
+//                                        pedido.setDescricao(descricao.toString());
+//                                        pedido.setData(data_atual.toString());
+//                                        pedido.setHora(dateFormat_hora.format(data_atual));
+//                                        pedido.setMesa(edt_mesa.getText().toString());
+//                                        realm.commitTransaction();
 
                                         Toast.makeText(getContext(), "Pedido enviado...", Toast.LENGTH_SHORT).show();
                                     }
