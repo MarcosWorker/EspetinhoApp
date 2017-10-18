@@ -1,5 +1,8 @@
 package br.com.forum.espetinhoapp.model.adapter;
 
+import android.content.DialogInterface;
+import android.os.Build;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +26,7 @@ public class AdapterPedido extends RecyclerView.Adapter<AdapterPedido.ViewHolder
 
     private List<Pedido> pedidos = null;
     private Realm realm = null;
+    private AlertDialog.Builder builder = null;
 
     public AdapterPedido(List<Pedido> pedidos) {
         this.pedidos = pedidos;
@@ -46,11 +50,45 @@ public class AdapterPedido extends RecyclerView.Adapter<AdapterPedido.ViewHolder
         holder.tvDescricao.setText(pedido.getDescricao());
         holder.tvTotal.setText(pedido.getTotal());
 
+        if(pedido.getStatus()==1){
+            holder.buttonOk.setVisibility(View.VISIBLE);
+            holder.button.setVisibility(View.INVISIBLE);
+        }else{
+            holder.buttonOk.setVisibility(View.INVISIBLE);
+            holder.button.setVisibility(View.VISIBLE);
+        }
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                holder.button.setBackground(view.setBackgroundResource());
-                Toast.makeText(view.getContext(), "Em construção...", Toast.LENGTH_SHORT).show();
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    builder = new AlertDialog.Builder(view.getContext(), android.R.style.Theme_Material_Dialog_Alert);
+                } else {
+                    builder = new AlertDialog.Builder(view.getContext());
+                }
+                builder.setTitle("ATENÇÃO!!!")
+                        .setMessage("Pedido já foi Entregue?")
+                        .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                            realm = Realm.getDefaultInstance();
+                                realm.beginTransaction();
+                                pedido.setStatus(1);
+                                realm.commitTransaction();
+                                realm.close();
+                                holder.button.setVisibility(View.INVISIBLE);
+                                holder.buttonOk.setVisibility(View.VISIBLE);
+                            }
+                        })
+                        .setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        })
+                        .setCancelable(false)
+                        .show();
+
             }
         });
 
@@ -72,6 +110,7 @@ public class AdapterPedido extends RecyclerView.Adapter<AdapterPedido.ViewHolder
         private TextView tvTotal = null;
         private TextView tvDescricao = null;
         private ImageButton button = null;
+        private ImageButton buttonOk = null;
 
         public ViewHolder(View v) {
             super(v);
@@ -80,6 +119,7 @@ public class AdapterPedido extends RecyclerView.Adapter<AdapterPedido.ViewHolder
             tvTotal = (TextView) v.findViewById(R.id.total_adapter_pedido);
             tvDescricao = (TextView) v.findViewById(R.id.pedido_adapter_pedido);
             button = (ImageButton) v.findViewById(R.id.status_button);
+            buttonOk = (ImageButton) v.findViewById(R.id.status_button_ok);
 
         }
 

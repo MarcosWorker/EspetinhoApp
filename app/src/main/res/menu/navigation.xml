@@ -11,13 +11,4 @@
         android:icon="@mipmap/ic_fazer_pedido"
         android:title="Pedidos" />
 
-    <item
-        android:id="@+id/navigation_comentarios"
-        android:icon="@mipmap/ic_comentarios"
-        android:title="Comentários" />
-    <item
-        android:id="@+id/navigation_local"
-        android:icon="@mipmap/ic_local"
-        android:title="Localização" />
-
 </menu>

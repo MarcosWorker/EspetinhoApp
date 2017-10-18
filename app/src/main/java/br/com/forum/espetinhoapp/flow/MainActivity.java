@@ -6,18 +6,13 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import br.com.forum.espetinhoapp.R;
 import br.com.forum.espetinhoapp.flow.fragments.CardapioFragment;
-import br.com.forum.espetinhoapp.flow.fragments.ComentariosFragment;
-import br.com.forum.espetinhoapp.flow.fragments.LocalFragment;
 import br.com.forum.espetinhoapp.flow.fragments.PedidosFragment;
-import br.com.forum.espetinhoapp.model.adapter.AdapterCardapio;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,18 +36,6 @@ public class MainActivity extends AppCompatActivity {
                     myToolbar.setTitle("Pedidos");
                     fragmentTransaction = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.replace(R.id.content, new PedidosFragment());
-                    fragmentTransaction.commit();
-                    return true;
-                case R.id.navigation_comentarios:
-                    myToolbar.setTitle("Comentarios");
-                    fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.replace(R.id.content, new ComentariosFragment());
-                    fragmentTransaction.commit();
-                    return true;
-                case R.id.navigation_local:
-                    myToolbar.setTitle("Localização");
-                    fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.replace(R.id.content, new LocalFragment());
                     fragmentTransaction.commit();
                     return true;
             }
