@@ -185,7 +185,7 @@ public class CardapioFragment extends Fragment {
 
                                     StringBuilder descricao = new StringBuilder("Descrição : \n");
                                     for (Espetinho espetinho : adapterCardapio.cardapioAtual()) {
-                                        if(espetinho.getQtd()>0){
+                                        if (espetinho.getQtd() > 0) {
                                             descricao.append(espetinho.getQtd())
                                                     .append(" ")
                                                     .append(espetinho.getNome())
@@ -213,15 +213,13 @@ public class CardapioFragment extends Fragment {
                                         pedido.setDescricao(descricao.toString());
                                         pedido.setData(data_atual.toString());
                                         pedido.setHora(dateFormat_hora.format(data_atual));
-                                        pedido.setMesa("Mesa "+edt_mesa.getText().toString());
-                                        pedido.setTotal("Total - R$ "+String.valueOf(total));
+                                        pedido.setMesa("Mesa " + edt_mesa.getText().toString());
+                                        pedido.setTotal("Total - R$ " + String.valueOf(total));
                                         pedido.setStatus(0);
                                         realm.commitTransaction();
 
                                         Toast.makeText(getContext(), "Pedido enviado...", Toast.LENGTH_SHORT).show();
                                     }
-
-
                                 }
                             })
                             .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -231,10 +229,7 @@ public class CardapioFragment extends Fragment {
                             })
                             .setCancelable(false)
                             .show();
-
                 }
-
-
             }
         });
 
@@ -242,20 +237,28 @@ public class CardapioFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (realm == null) {
+            realm = Realm.getDefaultInstance();
+        }
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
-        realm.close();
+        if (realm != null) {
+            realm.close();
+            realm = null;
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        realm.close();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        realm = Realm.getDefaultInstance();
+        if (realm != null) {
+            realm.close();
+            realm = null;
+        }
     }
 }

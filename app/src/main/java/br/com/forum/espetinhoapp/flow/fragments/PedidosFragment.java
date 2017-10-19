@@ -9,8 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.List;
-
 import br.com.forum.espetinhoapp.R;
 import br.com.forum.espetinhoapp.model.adapter.AdapterPedido;
 import br.com.forum.espetinhoapp.model.bean.Pedido;
@@ -33,12 +31,6 @@ public class PedidosFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public List<Pedido> listarPedidos() {
-        result = realm.where(Pedido.class).findAll();
-        return result;
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -48,7 +40,7 @@ public class PedidosFragment extends Fragment {
         realm = Realm.getDefaultInstance();
 
         recyclerView = (RecyclerView) view.findViewById(R.id.lista_pedidos);
-        listarPedidos();
+        result = realm.where(Pedido.class).findAll();
         adapterPedido = new AdapterPedido(result);
         mLayoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(mLayoutManager);
@@ -57,23 +49,29 @@ public class PedidosFragment extends Fragment {
         return view;
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
-        realm = Realm.getDefaultInstance();
-        listarPedidos();
+        if (realm == null) {
+            realm = Realm.getDefaultInstance();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        realm.close();
+        if (realm != null) {
+            realm.close();
+            realm = null;
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        realm.close();
+        if (realm != null) {
+            realm.close();
+            realm = null;
+        }
     }
 }

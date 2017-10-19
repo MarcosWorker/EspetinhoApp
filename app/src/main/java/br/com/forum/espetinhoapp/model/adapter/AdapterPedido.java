@@ -9,13 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.List;
 
 import br.com.forum.espetinhoapp.R;
 import br.com.forum.espetinhoapp.model.bean.Pedido;
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * Created by estagiario-manha on 16/10/17.
@@ -24,11 +22,11 @@ import io.realm.Realm;
 public class AdapterPedido extends RecyclerView.Adapter<AdapterPedido.ViewHolder> {
 
 
-    private List<Pedido> pedidos = null;
+    private RealmResults<Pedido> pedidos = null;
     private Realm realm = null;
     private AlertDialog.Builder builder = null;
 
-    public AdapterPedido(List<Pedido> pedidos) {
+    public AdapterPedido(RealmResults<Pedido> pedidos) {
         this.pedidos = pedidos;
     }
 
@@ -50,10 +48,10 @@ public class AdapterPedido extends RecyclerView.Adapter<AdapterPedido.ViewHolder
         holder.tvDescricao.setText(pedido.getDescricao());
         holder.tvTotal.setText(pedido.getTotal());
 
-        if(pedido.getStatus()==1){
+        if (pedido.getStatus() == 1) {
             holder.buttonOk.setVisibility(View.VISIBLE);
             holder.button.setVisibility(View.INVISIBLE);
-        }else{
+        } else {
             holder.buttonOk.setVisibility(View.INVISIBLE);
             holder.button.setVisibility(View.VISIBLE);
         }
@@ -71,7 +69,7 @@ public class AdapterPedido extends RecyclerView.Adapter<AdapterPedido.ViewHolder
                         .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                            realm = Realm.getDefaultInstance();
+                                realm = Realm.getDefaultInstance();
                                 realm.beginTransaction();
                                 pedido.setStatus(1);
                                 realm.commitTransaction();
@@ -96,7 +94,12 @@ public class AdapterPedido extends RecyclerView.Adapter<AdapterPedido.ViewHolder
 
     @Override
     public int getItemCount() {
-        return pedidos.size();
+        if (realm != null) {
+            return pedidos.size();
+        } else {
+            realm = Realm.getDefaultInstance();
+            return pedidos.size();
+        }
     }
 
     @Override
