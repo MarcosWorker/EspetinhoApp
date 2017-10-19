@@ -8,12 +8,17 @@ import io.realm.annotations.Required;
  * Created by Marco on 06/10/2017.
  */
 
-public class Espetinho {
+public class Espetinho extends RealmObject {
 
-    private long id;
+    @PrimaryKey
+    private String id;
+    @Required
     private String nome;
+    @Required
     private String descricao;
+    @Required
     private String dataPedido;
+    @Required
     private String dataEntrega;
     private int foto;
     private int qtd;
@@ -23,11 +28,11 @@ public class Espetinho {
     public Espetinho() {
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

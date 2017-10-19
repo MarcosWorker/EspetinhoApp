@@ -1,0 +1,67 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="br.com.forum.espetinhoapp.flow.fragments.NovoFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageButton
+            android:id="@+id/bt_add_foto"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="16dp"
+            android:background="@mipmap/ic_foto" />
+
+        <EditText
+            android:id="@+id/edt_nome_novo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_toEndOf="@+id/bt_add_foto"
+            android:layout_toRightOf="@+id/bt_add_foto"
+            android:hint="Nome do Espetinho..." />
+
+        <EditText
+            android:id="@+id/edt_preco_novo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/edt_nome_novo"
+            android:layout_marginRight="16dp"
+            android:layout_toEndOf="@+id/bt_add_foto"
+            android:layout_toRightOf="@+id/bt_add_foto"
+            android:hint="Preço do Espetinho..." />
+
+        <EditText
+            android:id="@+id/edt_descricao_novo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/bt_add_foto"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:hint="Descrição do espetinho..." />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_add_novo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="16dp"
+            android:src="@mipmap/ic_novo"
+            android:tint="#fff"
+            app:backgroundTint="#61932f" />
+
+    </RelativeLayout>
+
+</FrameLayout>

@@ -11,4 +11,9 @@
         android:icon="@mipmap/ic_fazer_pedido"
         android:title="Pedidos" />
 
+    <item
+        android:id="@+id/navigation_novo"
+        android:icon="@mipmap/ic_novo"
+        android:title="Novo" />
+
 </menu>
