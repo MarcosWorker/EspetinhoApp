@@ -27,6 +27,7 @@ import br.com.forum.espetinhoapp.model.adapter.AdapterCardapio;
 import br.com.forum.espetinhoapp.model.bean.Espetinho;
 import br.com.forum.espetinhoapp.model.bean.Pedido;
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,7 +37,7 @@ public class CardapioFragment extends Fragment {
     private RecyclerView recyclerView = null;
     private AdapterCardapio adapterCardapio = null;
     private RecyclerView.LayoutManager mLayoutManager = null;
-    private List<Espetinho> espetinhos = null;
+    private RealmResults<Espetinho> espetinhos = null;
     private View view = null;
     private Espetinho espetinho = null;
     private FloatingActionButton fab = null;
@@ -51,9 +52,6 @@ public class CardapioFragment extends Fragment {
     public CardapioFragment() {
         // Required empty public constructor
     }
-
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -61,90 +59,22 @@ public class CardapioFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_cardapio, container, false);
 
         realm = Realm.getDefaultInstance();
+        espetinhos = realm.where(Espetinho.class).findAll();
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.lista_cardapio);
-        adapterCardapio = new AdapterCardapio(espetinhos);
-        mLayoutManager = new LinearLayoutManager(view.getContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setAdapter(adapterCardapio);
-
+        if(espetinhos.isEmpty()){
+            Toast.makeText(view.getContext(), "Lista vazia ... Adicione espetinhos na aba \"Novo\"", Toast.LENGTH_LONG).show();
+        }else{
+            recyclerView = (RecyclerView) view.findViewById(R.id.lista_cardapio);
+            adapterCardapio = new AdapterCardapio(espetinhos);
+            mLayoutManager = new LinearLayoutManager(view.getContext());
+            recyclerView.setLayoutManager(mLayoutManager);
+            recyclerView.setAdapter(adapterCardapio);
+        }
         fab = (FloatingActionButton) view.findViewById(R.id.fab_cardapio);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                boolean vazio = true;
-
-                for (Espetinho espetinho : adapterCardapio.cardapioAtual()) {
-                    if (espetinho.getQtd() > 0) {
-                        vazio = false;
-                    }
-                }
-
-                if (vazio) {
-                    Toast.makeText(getContext(), "Não existe nada para pedir", Toast.LENGTH_SHORT).show();
-                } else {
-
-                    final View viewAlert = getActivity().getLayoutInflater().inflate(R.layout.alert_pedido, null);
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Dialog_Alert);
-                    } else {
-                        builder = new AlertDialog.Builder(getContext());
-                    }
-
-                    builder.setView(viewAlert)
-                            .setPositiveButton("Enviar", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    double total = 0.0;
-
-                                    StringBuilder descricao = new StringBuilder("Descrição : \n");
-                                    for (Espetinho espetinho : adapterCardapio.cardapioAtual()) {
-                                        if (espetinho.getQtd() > 0) {
-                                            descricao.append(espetinho.getQtd())
-                                                    .append(" ")
-                                                    .append(espetinho.getNome())
-                                                    .append(" - ")
-                                                    .append(espetinho.getPreco())
-                                                    .append("\n");
-                                            total = (espetinho.getQtd() * espetinho.getPreco()) + total;
-                                        }
-                                    }
-
-                                    dateFormat_hora = new SimpleDateFormat("HH:mm:ss");
-                                    data = new Date();
-
-                                    cal = Calendar.getInstance();
-                                    cal.setTime(data);
-                                    data_atual = cal.getTime();
-
-                                    edt_mesa = (EditText) viewAlert.findViewById(R.id.mesa_pedido);
-
-                                    if (edt_mesa.getText().toString().isEmpty()) {
-                                        Toast.makeText(getContext(), "Pedido negado... Precisa digitar o numero da mesa.", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        realm.beginTransaction();
-                                        Pedido pedido = realm.createObject(Pedido.class, UUID.randomUUID().toString()); // Create a new object
-                                        pedido.setDescricao(descricao.toString());
-                                        pedido.setData(data_atual.toString());
-                                        pedido.setHora(dateFormat_hora.format(data_atual));
-                                        pedido.setMesa("Mesa " + edt_mesa.getText().toString());
-                                        pedido.setTotal("Total - R$ " + String.valueOf(total));
-                                        pedido.setStatus(0);
-                                        realm.commitTransaction();
-
-                                        Toast.makeText(getContext(), "Pedido enviado...", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            })
-                            .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // do nothing
-                                }
-                            })
-                            .setCancelable(false)
-                            .show();
-                }
+                Toast.makeText(view.getContext(), "Em construção", Toast.LENGTH_SHORT).show();
             }
         });
 

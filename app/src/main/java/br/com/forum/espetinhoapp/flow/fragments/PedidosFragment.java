@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import br.com.forum.espetinhoapp.R;
 import br.com.forum.espetinhoapp.model.adapter.AdapterPedido;
@@ -38,14 +39,17 @@ public class PedidosFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_pedidos, container, false);
 
         realm = Realm.getDefaultInstance();
-
-        recyclerView = (RecyclerView) view.findViewById(R.id.lista_pedidos);
         result = realm.where(Pedido.class).findAll();
-        adapterPedido = new AdapterPedido(result);
-        mLayoutManager = new LinearLayoutManager(view.getContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setAdapter(adapterPedido);
 
+        if(result.isEmpty()){
+            Toast.makeText(view.getContext(), "Lista de Pedidos vazia...", Toast.LENGTH_SHORT).show();
+        }else{
+            recyclerView = (RecyclerView) view.findViewById(R.id.lista_pedidos);
+            adapterPedido = new AdapterPedido(result);
+            mLayoutManager = new LinearLayoutManager(view.getContext());
+            recyclerView.setLayoutManager(mLayoutManager);
+            recyclerView.setAdapter(adapterPedido);
+        }
         return view;
     }
 

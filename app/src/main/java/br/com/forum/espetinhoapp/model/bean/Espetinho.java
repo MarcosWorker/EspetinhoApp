@@ -16,13 +16,7 @@ public class Espetinho extends RealmObject {
     private String nome;
     @Required
     private String descricao;
-    @Required
-    private String dataPedido;
-    @Required
-    private String dataEntrega;
     private int foto;
-    private int qtd;
-    private int status;
     private double preco;
 
     public Espetinho() {
@@ -52,44 +46,12 @@ public class Espetinho extends RealmObject {
         this.descricao = descricao;
     }
 
-    public String getDataPedido() {
-        return dataPedido;
-    }
-
-    public void setDataPedido(String dataPedido) {
-        this.dataPedido = dataPedido;
-    }
-
-    public String getDataEntrega() {
-        return dataEntrega;
-    }
-
-    public void setDataEntrega(String dataEntrega) {
-        this.dataEntrega = dataEntrega;
-    }
-
     public int getFoto() {
         return foto;
     }
 
     public void setFoto(int foto) {
         this.foto = foto;
-    }
-
-    public int getQtd() {
-        return qtd;
-    }
-
-    public void setQtd(int qtd) {
-        this.qtd = qtd;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
     }
 
     public double getPreco() {

@@ -15,6 +15,7 @@ import br.com.forum.espetinhoapp.R;
 import br.com.forum.espetinhoapp.flow.fragments.CardapioFragment;
 import br.com.forum.espetinhoapp.flow.fragments.NovoFragment;
 import br.com.forum.espetinhoapp.flow.fragments.PedidosFragment;
+import br.com.forum.espetinhoapp.flow.fragments.RelatorioFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,6 +42,11 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_novo:
                     fragmentTransaction = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.replace(R.id.content, new NovoFragment());
+                    fragmentTransaction.commit();
+                    return true;
+                case R.id.navigation_relatorio:
+                    fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.content, new RelatorioFragment());
                     fragmentTransaction.commit();
                     return true;
             }

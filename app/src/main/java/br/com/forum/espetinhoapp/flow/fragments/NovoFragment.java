@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import br.com.forum.espetinhoapp.R;
 import io.realm.Realm;
@@ -44,7 +45,19 @@ public class NovoFragment extends Fragment {
         edtNovoDescricao = (EditText) view.findViewById(R.id.edt_descricao_novo);
         fabNovo=(FloatingActionButton)view.findViewById(R.id.fab_add_novo);
 
+        imageButtonAddFoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(view.getContext(), "Em construção...", Toast.LENGTH_SHORT).show();
+            }
+        });
 
+        fabNovo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(view.getContext(), "Em construção...", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return view;
     }

@@ -13,6 +13,7 @@ import java.util.List;
 
 import br.com.forum.espetinhoapp.R;
 import br.com.forum.espetinhoapp.model.bean.Espetinho;
+import io.realm.RealmResults;
 
 /**
  * Created by estagiario-manha on 06/10/17.
@@ -20,9 +21,9 @@ import br.com.forum.espetinhoapp.model.bean.Espetinho;
 
 public class AdapterCardapio extends RecyclerView.Adapter<AdapterCardapio.ViewHolder> {
 
-    private List<Espetinho> espetinhos = null;
+    private RealmResults<Espetinho> espetinhos = null;
 
-    public AdapterCardapio(List<Espetinho> espetinhos) {
+    public AdapterCardapio(RealmResults<Espetinho> espetinhos) {
         this.espetinhos = espetinhos;
     }
 
@@ -39,29 +40,6 @@ public class AdapterCardapio extends RecyclerView.Adapter<AdapterCardapio.ViewHo
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
         final Espetinho espetinho = espetinhos.get(position);
-        holder.fotoEspetinho.setImageResource(espetinho.getFoto());
-        holder.tvNome.setText(espetinho.getNome());
-        holder.tvPreco.setText("R$ " + espetinho.getPreco());
-        holder.tvDescricao.setText(espetinho.getDescricao());
-        holder.btAddEspetinho.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                espetinho.setQtd(espetinho.getQtd() + 1);
-                holder.tvQtd.setText(String.valueOf(espetinho.getQtd()));
-            }
-        });
-        holder.btRemoveEspetinho.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (espetinho.getQtd() <= 0) {
-                    Toast.makeText(view.getContext(), "Não existe pedido para esse item.", Toast.LENGTH_SHORT).show();
-                } else {
-                    espetinho.setQtd(espetinho.getQtd() - 1);
-                    holder.tvQtd.setText(String.valueOf(espetinho.getQtd()));
-                }
-
-            }
-        });
 
     }
 

@@ -16,4 +16,9 @@
         android:icon="@mipmap/ic_novo"
         android:title="Novo" />
 
+    <item
+        android:id="@+id/navigation_relatorio"
+        android:icon="@mipmap/ic_relatorio"
+        android:title="Relatorio" />
+
 </menu>

@@ -44,52 +44,6 @@ public class AdapterPedido extends RecyclerView.Adapter<AdapterPedido.ViewHolder
 
         final Pedido pedido = pedidos.get(position);
 
-        holder.tvMesa.setText(pedido.getMesa());
-        holder.tvDescricao.setText(pedido.getDescricao());
-        holder.tvTotal.setText(pedido.getTotal());
-
-        if (pedido.getStatus() == 1) {
-            holder.buttonOk.setVisibility(View.VISIBLE);
-            holder.button.setVisibility(View.INVISIBLE);
-        } else {
-            holder.buttonOk.setVisibility(View.INVISIBLE);
-            holder.button.setVisibility(View.VISIBLE);
-        }
-        holder.button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    builder = new AlertDialog.Builder(view.getContext(), android.R.style.Theme_Material_Dialog_Alert);
-                } else {
-                    builder = new AlertDialog.Builder(view.getContext());
-                }
-                builder.setTitle("ATENÇÃO!!!")
-                        .setMessage("Pedido já foi Entregue?")
-                        .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                realm = Realm.getDefaultInstance();
-                                realm.beginTransaction();
-                                pedido.setStatus(1);
-                                realm.commitTransaction();
-                                realm.close();
-                                holder.button.setVisibility(View.INVISIBLE);
-                                holder.buttonOk.setVisibility(View.VISIBLE);
-                            }
-                        })
-                        .setNegativeButton("Não", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                            }
-                        })
-                        .setCancelable(false)
-                        .show();
-
-            }
-        });
-
     }
 
     @Override
