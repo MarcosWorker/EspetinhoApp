@@ -2,6 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="br.com.forum.espetinhoapp">
 
+    <uses-permission android:name="android.permission.CAMERA"></uses-permission>
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
     <application
         android:name=".model.realm.MeuAppRealm"
         android:allowBackup="true"

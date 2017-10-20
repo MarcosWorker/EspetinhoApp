@@ -1,5 +1,7 @@
 package br.com.forum.espetinhoapp.model.adapter;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +47,6 @@ public class AdapterCardapio extends RecyclerView.Adapter<AdapterCardapio.ViewHo
         holder.tvDescricao.setText(espetinho.getDescricao());
         holder.tvPreco.setText("R$ " + String.valueOf(espetinho.getPreco()));
         holder.tvQtd.setText(qtdEspetinho[0]);
-        holder.fotoEspetinho.setImageResource(espetinho.getFoto());
         holder.btAddEspetinho.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,6 +67,10 @@ public class AdapterCardapio extends RecyclerView.Adapter<AdapterCardapio.ViewHo
                 }
             }
         });
+
+        //carregar a foto no imageView
+        Bitmap bitmap = BitmapFactory.decodeByteArray(espetinho.getFoto(), 0, espetinho.getFoto().length);
+        holder.fotoEspetinho.setImageBitmap(bitmap);
     }
 
     @Override

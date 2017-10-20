@@ -1,5 +1,7 @@
 package br.com.forum.espetinhoapp.model.bean;
 
+import android.graphics.Bitmap;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
@@ -16,7 +18,7 @@ public class Espetinho extends RealmObject {
     private String nome;
     @Required
     private String descricao;
-    private int foto;
+    private byte[] foto;
     private double preco;
     private int qtd;
 
@@ -47,11 +49,11 @@ public class Espetinho extends RealmObject {
         this.descricao = descricao;
     }
 
-    public int getFoto() {
+    public byte[] getFoto() {
         return foto;
     }
 
-    public void setFoto(int foto) {
+    public void setFoto(byte[] foto) {
         this.foto = foto;
     }
 
