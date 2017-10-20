@@ -37,10 +37,35 @@ public class AdapterCardapio extends RecyclerView.Adapter<AdapterCardapio.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         final Espetinho espetinho = espetinhos.get(position);
-
+        final int[] qtdEspetinho = {0};
+        holder.tvNome.setText(espetinho.getNome());
+        holder.tvDescricao.setText(espetinho.getDescricao());
+        holder.tvPreco.setText("R$ " + String.valueOf(espetinho.getPreco()));
+        holder.tvQtd.setText(qtdEspetinho[0]);
+        holder.fotoEspetinho.setImageResource(espetinho.getFoto());
+        holder.btAddEspetinho.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                qtdEspetinho[0]++;
+                espetinho.setQtd(qtdEspetinho[0]);
+                notifyItemChanged(position);
+            }
+        });
+        holder.btRemoveEspetinho.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (qtdEspetinho[0] == 0) {
+                    Toast.makeText(v.getContext(), "Impossivel quantidades negativas...", Toast.LENGTH_SHORT).show();
+                } else {
+                    qtdEspetinho[0]--;
+                    espetinho.setQtd(qtdEspetinho[0]);
+                    notifyItemChanged(position);
+                }
+            }
+        });
     }
 
     @Override
@@ -53,7 +78,7 @@ public class AdapterCardapio extends RecyclerView.Adapter<AdapterCardapio.ViewHo
         return position;
     }
 
-    public List<Espetinho> cardapioAtual(){
+    public List<Espetinho> cardapioAtual() {
         return espetinhos;
     }
 

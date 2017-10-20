@@ -18,6 +18,7 @@ public class Espetinho extends RealmObject {
     private String descricao;
     private int foto;
     private double preco;
+    private int qtd;
 
     public Espetinho() {
     }
@@ -60,5 +61,13 @@ public class Espetinho extends RealmObject {
 
     public void setPreco(double preco) {
         this.preco = preco;
+    }
+
+    public int getQtd() {
+        return qtd;
+    }
+
+    public void setQtd(int qtd) {
+        this.qtd = qtd;
     }
 }
