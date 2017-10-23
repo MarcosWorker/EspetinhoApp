@@ -2,9 +2,13 @@ package br.com.forum.espetinhoapp.flow.fragments;
 
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Path;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -17,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
@@ -43,12 +48,15 @@ public class NovoFragment extends Fragment {
     private Realm realm = null;
     private Espetinho espetinho = null;
     private byte[] byteArrayFoto = null;
+    private ImageView imageViewFoto = null;
 
     public NovoFragment() {
         // Required empty public constructor
     }
 
 
+    @TargetApi(Build.VERSION_CODES.M)
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -57,24 +65,34 @@ public class NovoFragment extends Fragment {
         realm = Realm.getDefaultInstance();
 
         imageButtonAddFoto = (ImageButton) view.findViewById(R.id.bt_add_foto);
+        imageViewFoto = (ImageView) view.findViewById(R.id.img_foto_novo);
         edtNovoNome = (EditText) view.findViewById(R.id.edt_nome_novo);
         edtNovoPreco = (EditText) view.findViewById(R.id.edt_preco_novo);
         edtNovoDescricao = (EditText) view.findViewById(R.id.edt_descricao_novo);
         fabNovo = (FloatingActionButton) view.findViewById(R.id.fab_add_novo);
 
+        if (view.getContext().checkSelfPermission(Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            requestPermissions(new String[]{Manifest.permission.CAMERA},
+                    TIRAR_FOTO);
+        } else {
+        }
+
+        imageViewFoto.setVisibility(View.INVISIBLE);
+
+        imageViewFoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tirarFoto();
+            }
+        });
+
         imageButtonAddFoto.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
-
-                if (view.getContext().checkSelfPermission(Manifest.permission.CAMERA)
-                        != PackageManager.PERMISSION_GRANTED) {
-
-                    requestPermissions(new String[]{Manifest.permission.CAMERA},
-                            TIRAR_FOTO);
-                } else {
-                    tirarFoto();
-                }
+                tirarFoto();
             }
         });
 
@@ -102,8 +120,11 @@ public class NovoFragment extends Fragment {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            getCircleBitmap(imageBitmap).compress(Bitmap.CompressFormat.PNG, 100, stream);
             byteArrayFoto = stream.toByteArray();
+            imageButtonAddFoto.setVisibility(View.INVISIBLE);
+            imageViewFoto.setVisibility(View.VISIBLE);
+            imageViewFoto.setImageBitmap(getCircleBitmap(imageBitmap));
         }
     }
 
@@ -119,6 +140,29 @@ public class NovoFragment extends Fragment {
                 // original question
             }
         }
+    }
+
+    public Bitmap getCircleBitmap(Bitmap scaleBitmapImage) {
+        int targetWidth = 200;
+        int targetHeight = 200;
+        Bitmap targetBitmap = Bitmap.createBitmap(targetWidth,
+                targetHeight, Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(targetBitmap);
+        Path path = new Path();
+        path.addCircle(((float) targetWidth - 1) / 2,
+                ((float) targetHeight - 1) / 2,
+                (Math.min(((float) targetWidth),
+                        ((float) targetHeight)) / 2),
+                Path.Direction.CCW);
+
+        canvas.clipPath(path);
+        Bitmap sourceBitmap = scaleBitmapImage;
+        canvas.drawBitmap(sourceBitmap,
+                new Rect(0, 0, sourceBitmap.getWidth(),
+                        sourceBitmap.getHeight()),
+                new Rect(0, 0, targetWidth, targetHeight), null);
+        return targetBitmap;
     }
 
     @Override
