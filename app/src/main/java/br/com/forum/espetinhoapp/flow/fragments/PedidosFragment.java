@@ -41,11 +41,11 @@ public class PedidosFragment extends Fragment {
         realm = Realm.getDefaultInstance();
         pedidos = realm.where(Pedido.class).findAll();
 
-        if(pedidos.isEmpty()){
+        if (pedidos.isEmpty()) {
             Toast.makeText(view.getContext(), "Lista de Pedidos vazia...", Toast.LENGTH_SHORT).show();
-        }else{
+        } else {
             recyclerView = (RecyclerView) view.findViewById(R.id.lista_pedidos);
-            adapterPedido = new AdapterPedido(pedidos);
+            adapterPedido = new AdapterPedido(pedidos,realm);
             mLayoutManager = new LinearLayoutManager(view.getContext());
             recyclerView.setLayoutManager(mLayoutManager);
             recyclerView.setAdapter(adapterPedido);
@@ -56,6 +56,14 @@ public class PedidosFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if (realm == null) {
+            realm = Realm.getDefaultInstance();
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         if (realm == null) {
             realm = Realm.getDefaultInstance();
         }

@@ -15,6 +15,7 @@ import java.util.List;
 
 import br.com.forum.espetinhoapp.R;
 import br.com.forum.espetinhoapp.model.bean.Espetinho;
+import io.realm.Realm;
 import io.realm.RealmResults;
 
 /**
@@ -24,9 +25,11 @@ import io.realm.RealmResults;
 public class AdapterCardapio extends RecyclerView.Adapter<AdapterCardapio.ViewHolder> {
 
     private RealmResults<Espetinho> espetinhos = null;
+    private Realm realm = null;
 
-    public AdapterCardapio(RealmResults<Espetinho> espetinhos) {
+    public AdapterCardapio(RealmResults<Espetinho> espetinhos, Realm realm) {
         this.espetinhos = espetinhos;
+        this.realm = realm;
     }
 
     @Override
@@ -42,27 +45,28 @@ public class AdapterCardapio extends RecyclerView.Adapter<AdapterCardapio.ViewHo
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         final Espetinho espetinho = espetinhos.get(position);
-        final int[] qtdEspetinho = {0};
         holder.tvNome.setText(espetinho.getNome());
         holder.tvDescricao.setText(espetinho.getDescricao());
         holder.tvPreco.setText("R$ " + String.valueOf(espetinho.getPreco()));
-        holder.tvQtd.setText(qtdEspetinho[0]);
+        holder.tvQtd.setText(String.valueOf(espetinho.getQtd()));
         holder.btAddEspetinho.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                qtdEspetinho[0]++;
-                espetinho.setQtd(qtdEspetinho[0]);
+                realm.beginTransaction();
+                espetinho.setQtd(espetinho.getQtd() + 1);
+                realm.commitTransaction();
                 notifyItemChanged(position);
             }
         });
         holder.btRemoveEspetinho.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (qtdEspetinho[0] == 0) {
+                if (espetinho.getQtd() == 0) {
                     Toast.makeText(v.getContext(), "Impossivel quantidades negativas...", Toast.LENGTH_SHORT).show();
                 } else {
-                    qtdEspetinho[0]--;
-                    espetinho.setQtd(qtdEspetinho[0]);
+                    realm.beginTransaction();
+                    espetinho.setQtd(espetinho.getQtd() - 1);
+                    realm.commitTransaction();
                     notifyItemChanged(position);
                 }
             }
@@ -83,7 +87,7 @@ public class AdapterCardapio extends RecyclerView.Adapter<AdapterCardapio.ViewHo
         return position;
     }
 
-    public List<Espetinho> cardapioAtual() {
+    public RealmResults<Espetinho> cardapioAtual() {
         return espetinhos;
     }
 

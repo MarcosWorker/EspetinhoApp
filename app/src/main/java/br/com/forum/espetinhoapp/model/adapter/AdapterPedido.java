@@ -1,8 +1,5 @@
 package br.com.forum.espetinhoapp.model.adapter;
 
-import android.content.DialogInterface;
-import android.os.Build;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +8,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import br.com.forum.espetinhoapp.R;
+import br.com.forum.espetinhoapp.model.bean.Espetinho;
 import br.com.forum.espetinhoapp.model.bean.Pedido;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -24,10 +22,10 @@ public class AdapterPedido extends RecyclerView.Adapter<AdapterPedido.ViewHolder
 
     private RealmResults<Pedido> pedidos = null;
     private Realm realm = null;
-    private AlertDialog.Builder builder = null;
 
-    public AdapterPedido(RealmResults<Pedido> pedidos) {
+    public AdapterPedido(RealmResults<Pedido> pedidos, Realm realm) {
         this.pedidos = pedidos;
+        this.realm = realm;
     }
 
     @Override
@@ -40,9 +38,40 @@ public class AdapterPedido extends RecyclerView.Adapter<AdapterPedido.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         final Pedido pedido = pedidos.get(position);
+        holder.tvMesa.setText(String.valueOf(pedido.getMesa()));
+        holder.tvTotal.setText(String.valueOf(pedido.getTotal()));
+        if (pedido.getStatus() == 0) {
+            holder.buttonOk.setVisibility(View.INVISIBLE);
+            holder.button.setVisibility(View.VISIBLE);
+        } else {
+            holder.buttonOk.setVisibility(View.VISIBLE);
+            holder.button.setVisibility(View.INVISIBLE);
+        }
+
+        holder.button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                realm.beginTransaction();
+                pedido.setStatus(1);
+                realm.commitTransaction();
+                notifyItemChanged(position);
+            }
+        });
+
+        StringBuilder stringBuilderDescricao = new StringBuilder("Descrição do pedido\n");
+        for (Espetinho espetinho : pedido.getEspetinhos()) {
+            stringBuilderDescricao.append(espetinho.getNome())
+                    .append("\n")
+                    .append("R$ ")
+                    .append(espetinho.getPreco())
+                    .append("\n")
+                    .append(espetinho.getQtd())
+                    .append(" unidade(s)");
+        }
+        holder.tvDescricao.setText(stringBuilderDescricao.toString());
 
     }
 

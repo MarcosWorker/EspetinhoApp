@@ -14,7 +14,9 @@ import android.widget.Toast;
 import br.com.forum.espetinhoapp.R;
 import br.com.forum.espetinhoapp.model.adapter.AdapterCardapio;
 import br.com.forum.espetinhoapp.model.bean.Espetinho;
+import br.com.forum.espetinhoapp.model.bean.Pedido;
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmResults;
 
 /**
@@ -29,6 +31,8 @@ public class CardapioFragment extends Fragment {
     private View view = null;
     private FloatingActionButton fab = null;
     private Realm realm = null;
+    private RealmList<Espetinho> espetinhosPedidos = null;
+    private Pedido pedido = null;
 
     public CardapioFragment() {
         // Required empty public constructor
@@ -47,7 +51,7 @@ public class CardapioFragment extends Fragment {
             Toast.makeText(view.getContext(), "Lista vazia ... Adicione espetinhos na aba \"Novo\"", Toast.LENGTH_LONG).show();
         } else {
             recyclerView = (RecyclerView) view.findViewById(R.id.lista_cardapio);
-            adapterCardapio = new AdapterCardapio(espetinhos);
+            adapterCardapio = new AdapterCardapio(espetinhos, realm);
             mLayoutManager = new LinearLayoutManager(view.getContext());
             recyclerView.setLayoutManager(mLayoutManager);
             recyclerView.setAdapter(adapterCardapio);
@@ -56,7 +60,45 @@ public class CardapioFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                Toast.makeText(view.getContext(), "Em construção", Toast.LENGTH_SHORT).show();
+
+                double total = 0;
+                espetinhosPedidos = new RealmList<Espetinho>();
+                for (Espetinho espetinho : adapterCardapio.cardapioAtual()) {
+                    if (espetinho.getQtd() > 0) {
+                        espetinhosPedidos.add(espetinho);
+                        total = (espetinho.getQtd() * espetinho.getPreco()) + total;
+
+                        realm.beginTransaction();
+                        espetinho.setQtd(0);
+                        realm.commitTransaction();
+                    }
+                    adapterCardapio.notifyDataSetChanged();
+                }
+
+                if (espetinhosPedidos.isEmpty()) {
+                    Toast.makeText(view.getContext(), "Cardapio zerado... Impossivel realizar pedido", Toast.LENGTH_SHORT).show();
+                } else {
+                    Number currentIdNum = realm.where(Espetinho.class).max("id");
+                    int nextId;
+                    if (currentIdNum == null) {
+                        nextId = 1;
+                    } else {
+                        nextId = currentIdNum.intValue() + 1;
+                    }
+                    realm.beginTransaction();
+                    pedido = realm.createObject(Pedido.class, nextId);
+                    pedido.setStatus(0);
+                    pedido.setCliente("cliente teste");
+                    pedido.setDataEntrega("Aguardando entrega");
+                    pedido.setDataPedido("23/10/2017");
+                    pedido.setEspetinhos(espetinhosPedidos);
+                    pedido.setMesa(1);
+                    pedido.setTotal(total);
+                    realm.commitTransaction();
+
+                    Toast.makeText(view.getContext(), "Pedido enviado", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 

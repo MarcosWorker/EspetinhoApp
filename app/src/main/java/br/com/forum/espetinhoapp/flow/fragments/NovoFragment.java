@@ -103,11 +103,11 @@ public class NovoFragment extends Fragment {
 
                 if (byteArrayFoto == null) {
                     Toast.makeText(view.getContext(), "Por favor insira uma foto...", Toast.LENGTH_SHORT).show();
-                } else if (edtNovoNome == null) {
+                } else if (edtNovoNome == null || edtNovoNome.getText().toString().isEmpty()) {
                     Toast.makeText(view.getContext(), "Por favor insira um nome...", Toast.LENGTH_SHORT).show();
-                } else if (edtNovoPreco == null) {
+                } else if (edtNovoPreco == null || edtNovoPreco.getText().toString().isEmpty()) {
                     Toast.makeText(view.getContext(), "Por favor insira um preço...", Toast.LENGTH_SHORT).show();
-                } else if (edtNovoDescricao == null) {
+                } else if (edtNovoDescricao == null || edtNovoDescricao.getText().toString().isEmpty()) {
                     Toast.makeText(view.getContext(), "Por favor insira uma descrição...", Toast.LENGTH_SHORT).show();
                 } else {
                     Number currentIdNum = realm.where(Espetinho.class).max("id");
@@ -118,8 +118,7 @@ public class NovoFragment extends Fragment {
                         nextId = currentIdNum.intValue() + 1;
                     }
                     realm.beginTransaction();
-                    Espetinho espetinho = realm.createObject(Espetinho.class);
-                    espetinho.setId(nextId);
+                    Espetinho espetinho = realm.createObject(Espetinho.class,nextId);
                     espetinho.setNome(edtNovoNome.getText().toString());
                     espetinho.setQtd(0);
                     espetinho.setDescricao(edtNovoDescricao.getText().toString());
@@ -198,6 +197,14 @@ public class NovoFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if (realm == null) {
+            realm = Realm.getDefaultInstance();
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         if (realm == null) {
             realm = Realm.getDefaultInstance();
         }
