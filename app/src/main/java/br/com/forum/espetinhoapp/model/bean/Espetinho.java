@@ -13,7 +13,7 @@ import io.realm.annotations.Required;
 public class Espetinho extends RealmObject {
 
     @PrimaryKey
-    private String id;
+    private long id;
     @Required
     private String nome;
     @Required
@@ -25,11 +25,11 @@ public class Espetinho extends RealmObject {
     public Espetinho() {
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
