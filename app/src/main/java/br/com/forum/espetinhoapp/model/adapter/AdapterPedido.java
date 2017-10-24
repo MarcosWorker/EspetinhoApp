@@ -8,7 +8,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import br.com.forum.espetinhoapp.R;
-import br.com.forum.espetinhoapp.model.bean.Espetinho;
+import br.com.forum.espetinhoapp.model.bean.EspetinhoCardapio;
 import br.com.forum.espetinhoapp.model.bean.Pedido;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -62,13 +62,13 @@ public class AdapterPedido extends RecyclerView.Adapter<AdapterPedido.ViewHolder
         });
 
         StringBuilder stringBuilderDescricao = new StringBuilder("Descrição do pedido\n");
-        for (Espetinho espetinho : pedido.getEspetinhos()) {
-            stringBuilderDescricao.append(espetinho.getNome())
+        for (EspetinhoCardapio espetinhoCardapio : pedido.getEspetinhos()) {
+            stringBuilderDescricao.append(espetinhoCardapio.getNome())
                     .append("\n")
                     .append("R$ ")
-                    .append(espetinho.getPreco())
+                    .append(espetinhoCardapio.getPreco())
                     .append("\n")
-                    .append(espetinho.getQtd())
+                    .append(espetinhoCardapio.getQtd())
                     .append(" unidade(s)");
         }
         holder.tvDescricao.setText(stringBuilderDescricao.toString());

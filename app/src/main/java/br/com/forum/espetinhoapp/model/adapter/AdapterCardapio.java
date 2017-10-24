@@ -14,9 +14,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import br.com.forum.espetinhoapp.R;
-import br.com.forum.espetinhoapp.model.bean.Espetinho;
-import io.realm.Realm;
-import io.realm.RealmResults;
+import br.com.forum.espetinhoapp.model.bean.EspetinhoCardapio;
 
 /**
  * Created by estagiario-manha on 06/10/17.
@@ -24,12 +22,10 @@ import io.realm.RealmResults;
 
 public class AdapterCardapio extends RecyclerView.Adapter<AdapterCardapio.ViewHolder> {
 
-    private RealmResults<Espetinho> espetinhos = null;
-    private Realm realm = null;
+    private List<EspetinhoCardapio> espetinhoCardapios = null;
 
-    public AdapterCardapio(RealmResults<Espetinho> espetinhos, Realm realm) {
-        this.espetinhos = espetinhos;
-        this.realm = realm;
+    public AdapterCardapio(List<EspetinhoCardapio> espetinhoCardapios) {
+        this.espetinhoCardapios = espetinhoCardapios;
     }
 
     @Override
@@ -44,42 +40,39 @@ public class AdapterCardapio extends RecyclerView.Adapter<AdapterCardapio.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        final Espetinho espetinho = espetinhos.get(position);
-        holder.tvNome.setText(espetinho.getNome());
-        holder.tvDescricao.setText(espetinho.getDescricao());
-        holder.tvPreco.setText("R$ " + String.valueOf(espetinho.getPreco()));
-        holder.tvQtd.setText(String.valueOf(espetinho.getQtd()));
+        int qtd=0;
+        final EspetinhoCardapio espetinhoCardapio = espetinhoCardapios.get(position);
+        holder.tvNome.setText(espetinhoCardapio.getNome());
+        holder.tvDescricao.setText(espetinhoCardapio.getDescricao());
+        holder.tvPreco.setText("R$ " + String.valueOf(espetinhoCardapio.getPreco()));
+        holder.tvQtd.setText(String.valueOf(qtd));
         holder.btAddEspetinho.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                realm.beginTransaction();
-                espetinho.setQtd(espetinho.getQtd() + 1);
-                realm.commitTransaction();
+
                 notifyItemChanged(position);
             }
         });
         holder.btRemoveEspetinho.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (espetinho.getQtd() == 0) {
+                if (espetinhoCardapio.getQtd() == 0) {
                     Toast.makeText(v.getContext(), "Impossivel quantidades negativas...", Toast.LENGTH_SHORT).show();
                 } else {
-                    realm.beginTransaction();
-                    espetinho.setQtd(espetinho.getQtd() - 1);
-                    realm.commitTransaction();
+                    espetinhoCardapio.setQtd(espetinhoCardapio.getQtd() - 1);
                     notifyItemChanged(position);
                 }
             }
         });
 
         //carregar a foto no imageView
-        Bitmap bitmap = BitmapFactory.decodeByteArray(espetinho.getFoto(), 0, espetinho.getFoto().length);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(espetinhoCardapio.getFoto(), 0, espetinhoCardapio.getFoto().length);
         holder.fotoEspetinho.setImageBitmap(bitmap);
     }
 
     @Override
     public int getItemCount() {
-        return espetinhos.size();
+        return espetinhoCardapios.size();
     }
 
     @Override
@@ -87,8 +80,8 @@ public class AdapterCardapio extends RecyclerView.Adapter<AdapterCardapio.ViewHo
         return position;
     }
 
-    public RealmResults<Espetinho> cardapioAtual() {
-        return espetinhos;
+    public List<EspetinhoCardapio> cardapioAtual() {
+        return espetinhoCardapios;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

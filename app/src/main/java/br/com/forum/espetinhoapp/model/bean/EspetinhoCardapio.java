@@ -10,7 +10,7 @@ import io.realm.annotations.Required;
  * Created by Marco on 06/10/2017.
  */
 
-public class Espetinho extends RealmObject {
+public class EspetinhoCardapio extends RealmObject {
 
     @PrimaryKey
     private long id;
@@ -20,9 +20,8 @@ public class Espetinho extends RealmObject {
     private String descricao;
     private byte[] foto;
     private double preco;
-    private int qtd;
 
-    public Espetinho() {
+    public EspetinhoCardapio() {
     }
 
     public long getId() {
@@ -63,13 +62,5 @@ public class Espetinho extends RealmObject {
 
     public void setPreco(double preco) {
         this.preco = preco;
-    }
-
-    public int getQtd() {
-        return qtd;
-    }
-
-    public void setQtd(int qtd) {
-        this.qtd = qtd;
     }
 }

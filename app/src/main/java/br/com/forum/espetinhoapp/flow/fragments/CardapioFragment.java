@@ -11,9 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.List;
+
 import br.com.forum.espetinhoapp.R;
 import br.com.forum.espetinhoapp.model.adapter.AdapterCardapio;
-import br.com.forum.espetinhoapp.model.bean.Espetinho;
+import br.com.forum.espetinhoapp.model.bean.EspetinhoCardapio;
 import br.com.forum.espetinhoapp.model.bean.Pedido;
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -27,12 +29,12 @@ public class CardapioFragment extends Fragment {
     private RecyclerView recyclerView = null;
     private AdapterCardapio adapterCardapio = null;
     private RecyclerView.LayoutManager mLayoutManager = null;
-    private RealmResults<Espetinho> espetinhos = null;
+    private RealmResults<EspetinhoCardapio> espetinhoCardapios = null;
     private View view = null;
     private FloatingActionButton fab = null;
     private Realm realm = null;
-    private RealmList<Espetinho> espetinhosPedidos = null;
     private Pedido pedido = null;
+    private List<EspetinhoCardapio>espetinhosListaCopiada = null;
 
     public CardapioFragment() {
         // Required empty public constructor
@@ -45,13 +47,14 @@ public class CardapioFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_cardapio, container, false);
 
         realm = Realm.getDefaultInstance();
-        espetinhos = realm.where(Espetinho.class).findAll();
+        espetinhoCardapios = realm.where(EspetinhoCardapio.class).findAll();
+        espetinhosListaCopiada = realm.copyFromRealm(espetinhoCardapios);
 
-        if (espetinhos.isEmpty()) {
-            Toast.makeText(view.getContext(), "Lista vazia ... Adicione espetinhos na aba \"Novo\"", Toast.LENGTH_LONG).show();
+        if (espetinhosListaCopiada.isEmpty()) {
+            Toast.makeText(view.getContext(), "Lista vazia ... Adicione espetinhoCardapios na aba \"Novo\"", Toast.LENGTH_LONG).show();
         } else {
             recyclerView = (RecyclerView) view.findViewById(R.id.lista_cardapio);
-            adapterCardapio = new AdapterCardapio(espetinhos, realm);
+            adapterCardapio = new AdapterCardapio(espetinhosListaCopiada);
             mLayoutManager = new LinearLayoutManager(view.getContext());
             recyclerView.setLayoutManager(mLayoutManager);
             recyclerView.setAdapter(adapterCardapio);
@@ -62,14 +65,14 @@ public class CardapioFragment extends Fragment {
             public void onClick(final View view) {
 
                 double total = 0;
-                espetinhosPedidos = new RealmList<Espetinho>();
-                for (Espetinho espetinho : adapterCardapio.cardapioAtual()) {
-                    if (espetinho.getQtd() > 0) {
-                        espetinhosPedidos.add(espetinho);
-                        total = (espetinho.getQtd() * espetinho.getPreco()) + total;
+                espetinhosPedidos = new RealmList<EspetinhoCardapio>();
+                for (EspetinhoCardapio espetinhoCardapio : adapterCardapio.cardapioAtual()) {
+                    if (espetinhoCardapio.getQtd() > 0) {
+                        espetinhosPedidos.add(espetinhoCardapio);
+                        total = (espetinhoCardapio.getQtd() * espetinhoCardapio.getPreco()) + total;
 
                         realm.beginTransaction();
-                        espetinho.setQtd(0);
+                        espetinhoCardapio.setQtd(0);
                         realm.commitTransaction();
                     }
                     adapterCardapio.notifyDataSetChanged();
@@ -78,7 +81,7 @@ public class CardapioFragment extends Fragment {
                 if (espetinhosPedidos.isEmpty()) {
                     Toast.makeText(view.getContext(), "Cardapio zerado... Impossivel realizar pedido", Toast.LENGTH_SHORT).show();
                 } else {
-                    Number currentIdNum = realm.where(Espetinho.class).max("id");
+                    Number currentIdNum = realm.where(EspetinhoCardapio.class).max("id");
                     int nextId;
                     if (currentIdNum == null) {
                         nextId = 1;

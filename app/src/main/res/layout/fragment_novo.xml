@@ -60,7 +60,7 @@
             android:layout_alignStart="@+id/ll"
             android:layout_below="@+id/edt_preco_novo"
             android:layout_marginTop="16dp"
-            android:hint="Descrição do espetinho..." />
+            android:hint="Descrição do espetinhoCardapio..." />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_add_novo"

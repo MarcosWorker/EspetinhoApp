@@ -1,6 +1,7 @@
 package br.com.forum.espetinhoapp.model.bean;
 
-import io.realm.RealmList;
+import java.util.List;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
@@ -13,8 +14,6 @@ public class Pedido extends RealmObject {
 
     @PrimaryKey
     private long id;
-    @Required
-    private RealmList<Espetinho> espetinhos;
     @Required
     private String dataPedido;
     @Required
@@ -37,14 +36,6 @@ public class Pedido extends RealmObject {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public RealmList<Espetinho> getEspetinhos() {
-        return espetinhos;
-    }
-
-    public void setEspetinhos(RealmList<Espetinho> espetinhos) {
-        this.espetinhos = espetinhos;
     }
 
     public String getDataPedido() {
