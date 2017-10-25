@@ -27,6 +27,7 @@ import android.widget.Toast;
 import java.io.ByteArrayOutputStream;
 
 import br.com.forum.espetinhoapp.R;
+import br.com.forum.espetinhoapp.model.bean.Espetinho;
 import br.com.forum.espetinhoapp.model.bean.EspetinhoCardapio;
 import io.realm.Realm;
 
@@ -46,7 +47,7 @@ public class NovoFragment extends Fragment {
     private EditText edtNovoDescricao = null;
     private FloatingActionButton fabNovo = null;
     private Realm realm = null;
-    private EspetinhoCardapio espetinhoCardapio = null;
+    private Espetinho espetinho = null;
     private byte[] byteArrayFoto = null;
     private ImageView imageViewFoto = null;
 
@@ -109,7 +110,7 @@ public class NovoFragment extends Fragment {
                 } else if (edtNovoDescricao == null || edtNovoDescricao.getText().toString().isEmpty()) {
                     Toast.makeText(view.getContext(), "Por favor insira uma descrição...", Toast.LENGTH_SHORT).show();
                 } else {
-                    Number currentIdNum = realm.where(EspetinhoCardapio.class).max("id");
+                    Number currentIdNum = realm.where(Espetinho.class).max("id");
                     int nextId;
                     if(currentIdNum == null) {
                         nextId = 1;
@@ -117,12 +118,12 @@ public class NovoFragment extends Fragment {
                         nextId = currentIdNum.intValue() + 1;
                     }
                     realm.beginTransaction();
-                    EspetinhoCardapio espetinhoCardapio = realm.createObject(EspetinhoCardapio.class,nextId);
-                    espetinhoCardapio.setNome(edtNovoNome.getText().toString());
-                    espetinhoCardapio.setQtd(0);
-                    espetinhoCardapio.setDescricao(edtNovoDescricao.getText().toString());
-                    espetinhoCardapio.setFoto(byteArrayFoto);
-                    espetinhoCardapio.setPreco(Double.valueOf(edtNovoPreco.getText().toString()));
+                    espetinho = realm.createObject(Espetinho.class,nextId);
+                    espetinho.setNome(edtNovoNome.getText().toString());
+                    espetinho.setQtd(0);
+                    espetinho.setDescricao(edtNovoDescricao.getText().toString());
+                    espetinho.setFoto(byteArrayFoto);
+                    espetinho.setPreco(Double.valueOf(edtNovoPreco.getText().toString()));
                     realm.commitTransaction();
 
                     Toast.makeText(view.getContext(), "EspetinhoCardapio adicionado com sucesso...", Toast.LENGTH_SHORT).show();

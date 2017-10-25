@@ -5,10 +5,10 @@ import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
 
 /**
- * Created by Marco on 06/10/2017.
+ * Created by estagiario-manha on 25/10/17.
  */
 
-public class EspetinhoCardapio extends RealmObject {
+public class Espetinho extends RealmObject {
 
     @PrimaryKey
     private long id;
@@ -16,11 +16,11 @@ public class EspetinhoCardapio extends RealmObject {
     private String nome;
     @Required
     private String descricao;
-    private long idPedido;
     private int qtd;
+    private byte[] foto;
     private double preco;
 
-    public EspetinhoCardapio() {
+    public Espetinho() {
     }
 
     public long getId() {
@@ -47,20 +47,20 @@ public class EspetinhoCardapio extends RealmObject {
         this.descricao = descricao;
     }
 
-    public long getIdPedido() {
-        return idPedido;
-    }
-
-    public void setIdPedido(long idPedido) {
-        this.idPedido = idPedido;
-    }
-
     public int getQtd() {
         return qtd;
     }
 
     public void setQtd(int qtd) {
         this.qtd = qtd;
+    }
+
+    public byte[] getFoto() {
+        return foto;
+    }
+
+    public void setFoto(byte[] foto) {
+        this.foto = foto;
     }
 
     public double getPreco() {
@@ -70,4 +70,5 @@ public class EspetinhoCardapio extends RealmObject {
     public void setPreco(double preco) {
         this.preco = preco;
     }
+
 }

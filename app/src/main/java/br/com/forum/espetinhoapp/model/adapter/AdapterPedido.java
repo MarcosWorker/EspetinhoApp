@@ -11,6 +11,7 @@ import br.com.forum.espetinhoapp.R;
 import br.com.forum.espetinhoapp.model.bean.EspetinhoCardapio;
 import br.com.forum.espetinhoapp.model.bean.Pedido;
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmResults;
 
 /**
@@ -62,7 +63,10 @@ public class AdapterPedido extends RecyclerView.Adapter<AdapterPedido.ViewHolder
         });
 
         StringBuilder stringBuilderDescricao = new StringBuilder("Descrição do pedido\n");
-        for (EspetinhoCardapio espetinhoCardapio : pedido.getEspetinhos()) {
+        RealmResults<EspetinhoCardapio> espetinhoCardapios= realm.where(EspetinhoCardapio.class)
+                .equalTo("idPedido",pedido.getId())
+                .findAll();
+        for (EspetinhoCardapio espetinhoCardapio : espetinhoCardapios) {
             stringBuilderDescricao.append(espetinhoCardapio.getNome())
                     .append("\n")
                     .append("R$ ")
