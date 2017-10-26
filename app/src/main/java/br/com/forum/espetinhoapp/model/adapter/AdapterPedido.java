@@ -1,5 +1,7 @@
 package br.com.forum.espetinhoapp.model.adapter;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +45,7 @@ public class AdapterPedido extends RecyclerView.Adapter<AdapterPedido.ViewHolder
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         final Pedido pedido = pedidos.get(position);
+        holder.tvCliente.setText("Cliente - " + pedido.getCliente());
         holder.tvMesa.setText("Mesa - " + String.valueOf(pedido.getMesa()));
         holder.tvTotal.setText("Total - R$ " + String.valueOf(pedido.getTotal()));
         holder.tvDataEntrega.setText(pedido.getDataEntrega());
@@ -64,31 +67,62 @@ public class AdapterPedido extends RecyclerView.Adapter<AdapterPedido.ViewHolder
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                realm.beginTransaction();
-                pedido.setStatus(1);
-                java.util.Date agora = new java.util.Date();
-                SimpleDateFormat formata = new SimpleDateFormat("dd/MM/yyyy");
-                String data1 = formata.format(agora);
-                formata = new SimpleDateFormat("hh:mm:ss");
-                String hora1 = formata.format(agora);
-                pedido.setDataEntrega("Data de entrega : " + data1 + " " + hora1);
-                realm.commitTransaction();
-                notifyItemChanged(position);
+
+                AlertDialog alertDialog = new AlertDialog.Builder(v.getContext()).create();
+                alertDialog.setTitle("Alerta");
+                alertDialog.setMessage("O pedido já foi entregue ?");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                realm.beginTransaction();
+                                pedido.setStatus(1);
+                                java.util.Date agora = new java.util.Date();
+                                SimpleDateFormat formata = new SimpleDateFormat("dd/MM/yyyy");
+                                String data1 = formata.format(agora);
+                                formata = new SimpleDateFormat("hh:mm:ss");
+                                String hora1 = formata.format(agora);
+                                pedido.setDataEntrega("Data de entrega : " + data1 + " " + hora1);
+                                realm.commitTransaction();
+                                notifyItemChanged(position);
+
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+                alertDialog.setCanceledOnTouchOutside(false);
+
             }
         });
 
         holder.buttonPagar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                realm.beginTransaction();
-                pedido.setStatus(2);
-                realm.commitTransaction();
-                notifyItemChanged(position);
+
+                AlertDialog alertDialog = new AlertDialog.Builder(v.getContext()).create();
+                alertDialog.setTitle("Alerta");
+                alertDialog.setMessage("O pedido já foi pago ?");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                realm.beginTransaction();
+                                pedido.setStatus(2);
+                                realm.commitTransaction();
+                                notifyItemChanged(position);
+
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+                alertDialog.setCanceledOnTouchOutside(false);
+
             }
         });
 
         StringBuilder stringBuilderDescricao = new StringBuilder("Descrição do pedido\n");
         RealmResults<EspetinhoCardapio> espetinhoCardapios = realm.where(EspetinhoCardapio.class)
+                .equalTo("idPedido", pedido.getId())
                 .findAll();
         for (EspetinhoCardapio espetinhoCardapio : espetinhoCardapios) {
             stringBuilderDescricao.append(espetinhoCardapio.getNome())
@@ -105,12 +139,7 @@ public class AdapterPedido extends RecyclerView.Adapter<AdapterPedido.ViewHolder
 
     @Override
     public int getItemCount() {
-        if (realm != null) {
             return pedidos.size();
-        } else {
-            realm = Realm.getDefaultInstance();
-            return pedidos.size();
-        }
     }
 
     @Override
@@ -121,6 +150,7 @@ public class AdapterPedido extends RecyclerView.Adapter<AdapterPedido.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvMesa = null;
+        private TextView tvCliente = null;
         private TextView tvTotal = null;
         private TextView tvDataPedido = null;
         private TextView tvDataEntrega = null;
@@ -133,6 +163,7 @@ public class AdapterPedido extends RecyclerView.Adapter<AdapterPedido.ViewHolder
             super(v);
 
             tvMesa = (TextView) v.findViewById(R.id.mesa_adapter_pedido);
+            tvCliente = (TextView) v.findViewById(R.id.cliente_adapter_pedido);
             tvTotal = (TextView) v.findViewById(R.id.total_adapter_pedido);
             tvDataPedido = (TextView) v.findViewById(R.id.data_inicio_adapter_pedido);
             tvDataEntrega = (TextView) v.findViewById(R.id.data_entregue_adapter_pedido);

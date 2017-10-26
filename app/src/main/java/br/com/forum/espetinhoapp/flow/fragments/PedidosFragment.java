@@ -39,18 +39,22 @@ public class PedidosFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_pedidos, container, false);
 
         realm = Realm.getDefaultInstance();
+        carregarLista();
+        return view;
+    }
+
+    private void carregarLista() {
         pedidos = realm.where(Pedido.class).findAll();
 
         if (pedidos.isEmpty()) {
             Toast.makeText(view.getContext(), "Lista de Pedidos vazia...", Toast.LENGTH_SHORT).show();
         } else {
             recyclerView = (RecyclerView) view.findViewById(R.id.lista_pedidos);
-            adapterPedido = new AdapterPedido(pedidos,realm);
+            adapterPedido = new AdapterPedido(pedidos, realm);
             mLayoutManager = new LinearLayoutManager(view.getContext());
             recyclerView.setLayoutManager(mLayoutManager);
             recyclerView.setAdapter(adapterPedido);
         }
-        return view;
     }
 
     @Override
@@ -58,6 +62,7 @@ public class PedidosFragment extends Fragment {
         super.onResume();
         if (realm == null) {
             realm = Realm.getDefaultInstance();
+            carregarLista();
         }
     }
 
@@ -66,6 +71,7 @@ public class PedidosFragment extends Fragment {
         super.onStart();
         if (realm == null) {
             realm = Realm.getDefaultInstance();
+            carregarLista();
         }
     }
 

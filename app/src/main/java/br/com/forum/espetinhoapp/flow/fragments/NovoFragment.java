@@ -3,6 +3,8 @@ package br.com.forum.espetinhoapp.flow.fragments;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -16,6 +18,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +42,7 @@ public class NovoFragment extends Fragment {
 
     private final int TIRAR_FOTO = 1;
 
-    private View view = null;
+    private View viewTela = null;
     private ImageButton imageButtonAddFoto = null;
     private EditText edtNovoNome = null;
     private EditText edtNovoPreco = null;
@@ -61,17 +64,17 @@ public class NovoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_novo, container, false);
+        viewTela = inflater.inflate(R.layout.fragment_novo, container, false);
         realm = Realm.getDefaultInstance();
 
-        imageButtonAddFoto = (ImageButton) view.findViewById(R.id.bt_add_foto);
-        imageViewFoto = (ImageView) view.findViewById(R.id.img_foto_novo);
-        edtNovoNome = (EditText) view.findViewById(R.id.edt_nome_novo);
-        edtNovoPreco = (EditText) view.findViewById(R.id.edt_preco_novo);
-        edtNovoDescricao = (EditText) view.findViewById(R.id.edt_descricao_novo);
-        fabNovo = (FloatingActionButton) view.findViewById(R.id.fab_add_novo);
+        imageButtonAddFoto = (ImageButton) viewTela.findViewById(R.id.bt_add_foto);
+        imageViewFoto = (ImageView) viewTela.findViewById(R.id.img_foto_novo);
+        edtNovoNome = (EditText) viewTela.findViewById(R.id.edt_nome_novo);
+        edtNovoPreco = (EditText) viewTela.findViewById(R.id.edt_preco_novo);
+        edtNovoDescricao = (EditText) viewTela.findViewById(R.id.edt_descricao_novo);
+        fabNovo = (FloatingActionButton) viewTela.findViewById(R.id.fab_add_novo);
 
-        if (view.getContext().checkSelfPermission(Manifest.permission.CAMERA)
+        if (viewTela.getContext().checkSelfPermission(Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
 
             requestPermissions(new String[]{Manifest.permission.CAMERA},
@@ -109,40 +112,54 @@ public class NovoFragment extends Fragment {
                 } else if (edtNovoDescricao == null || edtNovoDescricao.getText().toString().isEmpty()) {
                     Toast.makeText(view.getContext(), "Por favor insira uma descrição...", Toast.LENGTH_SHORT).show();
                 } else {
-                    Number currentIdNum = realm.where(Espetinho.class).max("id");
-                    int nextId;
-                    if (currentIdNum == null) {
-                        nextId = 1;
-                    } else {
-                        nextId = currentIdNum.intValue() + 1;
-                    }
-                    realm.beginTransaction();
-                    espetinho = realm.createObject(Espetinho.class, nextId);
-                    espetinho.setNome(edtNovoNome.getText().toString());
-                    espetinho.setQtd(0);
-                    espetinho.setDescricao(edtNovoDescricao.getText().toString());
-                    espetinho.setFoto(byteArrayFoto);
-                    espetinho.setPreco(Double.valueOf(edtNovoPreco.getText().toString()));
-                    realm.commitTransaction();
 
-                    Toast.makeText(view.getContext(), "EspetinhoCardapio adicionado com sucesso...", Toast.LENGTH_SHORT).show();
+                    AlertDialog alertDialog = new AlertDialog.Builder(view.getContext()).create();
+                    alertDialog.setTitle("Alerta");
+                    alertDialog.setMessage("Adicionar esse espetinho?");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
 
-                    edtNovoNome.setText("");
-                    edtNovoDescricao.setText("");
-                    edtNovoPreco.setText("");
-                    imageViewFoto.setImageResource(R.mipmap.ic_foto);
+                                    Number currentIdNum = realm.where(Espetinho.class).max("id");
+                                    int nextId;
+                                    if (currentIdNum == null) {
+                                        nextId = 1;
+                                    } else {
+                                        nextId = currentIdNum.intValue() + 1;
+                                    }
+                                    realm.beginTransaction();
+                                    espetinho = realm.createObject(Espetinho.class, nextId);
+                                    espetinho.setNome(edtNovoNome.getText().toString());
+                                    espetinho.setQtd(0);
+                                    espetinho.setDescricao(edtNovoDescricao.getText().toString());
+                                    espetinho.setFoto(byteArrayFoto);
+                                    espetinho.setPreco(Double.valueOf(edtNovoPreco.getText().toString()));
+                                    realm.commitTransaction();
+
+                                    edtNovoNome.setText("");
+                                    edtNovoDescricao.setText("");
+                                    edtNovoPreco.setText("");
+                                    byteArrayFoto = null;
+                                    imageViewFoto.setImageResource(R.mipmap.ic_foto);
+                                    dialog.dismiss();
+                                    Toast.makeText(viewTela.getContext(), "Espetinho salvo com sucesso", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                    alertDialog.show();
+                    alertDialog.setCanceledOnTouchOutside(false);
+
 
                 }
 
             }
         });
 
-        return view;
+        return viewTela;
     }
 
     private void tirarFoto() {
         Intent intentTirarFoto = intentTirarFoto = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (intentTirarFoto.resolveActivity(view.getContext().getPackageManager()) != null) {
+        if (intentTirarFoto.resolveActivity(viewTela.getContext().getPackageManager()) != null) {
             startActivityForResult(intentTirarFoto, TIRAR_FOTO);
         }
     }

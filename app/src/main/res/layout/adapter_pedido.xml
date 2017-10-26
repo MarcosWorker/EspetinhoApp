@@ -12,6 +12,18 @@
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
+        android:text="Cliente"
+        android:textColor="#000"
+        android:textSize="15dp" />
+
+    <TextView
+        android:id="@+id/cliente_adapter_pedido"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_below="@id/mesa_adapter_pedido"
         android:text="Mesa"
         android:textColor="#000"
         android:textSize="15dp" />
@@ -20,12 +32,12 @@
         android:id="@+id/pedido_adapter_pedido"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/mesa_adapter_pedido"
+        android:layout_below="@id/cliente_adapter_pedido"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:text="Descrição"
-        android:textColor="#6e6e6e"
+        android:textColor="#864a4a"
         android:textSize="15dp" />
 
     <TextView

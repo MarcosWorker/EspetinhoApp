@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import br.com.forum.espetinhoapp.R;
@@ -37,6 +38,7 @@ public class CardapioFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager = null;
     private RealmResults<Espetinho> espetinhos = null;
     private List<Espetinho> espetinhosAdapter = null;
+    private List<Espetinho> listaPedido = null;
     private View view = null;
     private FloatingActionButton fab = null;
     private Realm realm = null;
@@ -65,53 +67,24 @@ public class CardapioFragment extends Fragment {
 
                 //atualiza lista
                 adapterCardapio.notifyDataSetChanged();
-                //captura tamanho da lista
-                int tamanhoLista = adapterCardapio.cardapioAtual().size();
-                //cria variavel do valor total do pedido
-                double total = 0;
-
-                //pegar proximo id do Pedido - inicio
-                Number currentIdNumPedido = realm.where(Pedido.class).max("id");
-                final int nextIdPedido;
-                if (currentIdNumPedido == null) {
-                    nextIdPedido = 1;
-                } else {
-                    nextIdPedido = currentIdNumPedido.intValue() + 1;
-                }
-                //pegar proximo id do Pedido - fim
-
+                //total de cada espetinho
+                final double[] total = {0};
+                //preenche a lista de pedido - inicio
+                listaPedido = new ArrayList<Espetinho>();
                 for (Espetinho espetinho : adapterCardapio.cardapioAtual()) {
-                    if (espetinho.getQtd() == 0) {
-                        tamanhoLista = tamanhoLista - 1;
-                    } else {
-                        //pegar proximo id do EspetinhoCardapio - inicio
-                        Number currentIdNumEspetinhoCardapio = realm.where(EspetinhoCardapio.class).max("id");
-                        int nextIdEspetinhoCardapio;
-                        if (currentIdNumEspetinhoCardapio == null) {
-                            nextIdEspetinhoCardapio = 1;
-                        } else {
-                            nextIdEspetinhoCardapio = currentIdNumEspetinhoCardapio.intValue() + 1;
-                        }
-                        //pegar proximo id do EspetinhoCardapio - fim
-
-                        realm.beginTransaction();
-                        espetinhoCardapio = realm.createObject(EspetinhoCardapio.class, nextIdEspetinhoCardapio);
-                        espetinhoCardapio.setQtd(espetinho.getQtd());
-                        espetinhoCardapio.setPreco(espetinho.getPreco());
-                        espetinhoCardapio.setDescricao(espetinho.getDescricao());
-                        espetinhoCardapio.setNome(espetinho.getNome());
-                        espetinhoCardapio.setIdPedido(nextIdPedido);
-                        realm.commitTransaction();
-
-                        //calculo do total
-                        total = (espetinho.getQtd() * espetinho.getPreco()) + total;
+                    if (espetinho.getQtd() > 0) {
+                        listaPedido.add(espetinho);
                     }
                 }
-                if (tamanhoLista == 0) {
-                    Toast.makeText(view.getContext(), "Não existe nada para pedir", Toast.LENGTH_SHORT).show();
-                    carregarCardapio();
+                //preenche a lista de pedido - fim
 
+                //se a lista estiver vazia?
+                if (listaPedido.isEmpty()) {
+                    //não envia pedido
+                    Toast.makeText(view.getContext(), "Não existe nada para pedir", Toast.LENGTH_SHORT).show();
                 } else {
+                    //envia pedido
+                    //exibe dialogo para confirmar pedido - inicio
 
                     android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(view.getContext());
                     builder.setTitle("Pedido");
@@ -120,7 +93,6 @@ public class CardapioFragment extends Fragment {
                     LayoutInflater factory = LayoutInflater.from(view.getContext());
                     final View dialogView = factory.inflate(R.layout.adapter_dialog_pedido, null);
                     builder.setView(dialogView);
-                    final double finalTotal = total;
                     builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface arg0, int arg1) {
 
@@ -132,6 +104,42 @@ public class CardapioFragment extends Fragment {
                             } else if (edtDialogMesa == null || edtDialogMesa.getText().toString().isEmpty()) {
                                 Toast.makeText(view.getContext(), "Digite uma mesa antes de confirmar", Toast.LENGTH_SHORT).show();
                             } else {
+
+                                //pegar proximo id do Pedido - inicio
+                                Number currentIdNumPedido = realm.where(Pedido.class).max("id");
+                                final int nextIdPedido;
+                                if (currentIdNumPedido == null) {
+                                    nextIdPedido = 1;
+                                } else {
+                                    nextIdPedido = currentIdNumPedido.intValue() + 1;
+                                }
+                                //pegar proximo id do Pedido - fim
+
+                                for (Espetinho espetinho : listaPedido) {
+                                    //pegar proximo id do EspetinhoCardapio - inicio
+                                    Number currentIdNumEspetinhoCardapio = realm.where(EspetinhoCardapio.class).max("id");
+                                    int nextIdEspetinhoCardapio;
+                                    if (currentIdNumEspetinhoCardapio == null) {
+                                        nextIdEspetinhoCardapio = 1;
+                                    } else {
+                                        nextIdEspetinhoCardapio = currentIdNumEspetinhoCardapio.intValue() + 1;
+                                    }
+                                    //pegar proximo id do EspetinhoCardapio - fim
+
+                                    realm.beginTransaction();
+                                    espetinhoCardapio = realm.createObject(EspetinhoCardapio.class, nextIdEspetinhoCardapio);
+                                    espetinhoCardapio.setQtd(espetinho.getQtd());
+                                    espetinhoCardapio.setPreco(espetinho.getPreco());
+                                    espetinhoCardapio.setDescricao(espetinho.getDescricao());
+                                    espetinhoCardapio.setNome(espetinho.getNome());
+                                    espetinhoCardapio.setIdPedido(nextIdPedido);
+                                    realm.commitTransaction();
+
+                                    //calculo do total
+                                    total[0] = (espetinho.getQtd() * espetinho.getPreco()) + total[0];
+                                }
+
+
                                 realm.beginTransaction();
                                 pedido = realm.createObject(Pedido.class, nextIdPedido);
                                 pedido.setStatus(0);
@@ -144,7 +152,7 @@ public class CardapioFragment extends Fragment {
                                 String hora1 = formata.format(agora);
                                 pedido.setDataPedido(data1 + " " + hora1);
                                 pedido.setMesa(Integer.valueOf(edtDialogMesa.getText().toString()));
-                                pedido.setTotal(finalTotal);
+                                pedido.setTotal(total[0]);
                                 realm.commitTransaction();
 
                                 Toast.makeText(view.getContext(), "Pedido enviado", Toast.LENGTH_SHORT).show();
@@ -162,6 +170,8 @@ public class CardapioFragment extends Fragment {
                     alerta.show();
                     alerta.setCanceledOnTouchOutside(false);
                     alerta.setCancelable(false);
+
+                    //dialogo fim
 
                 }
             }
