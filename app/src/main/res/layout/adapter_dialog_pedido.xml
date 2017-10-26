@@ -2,28 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_margin="16dp"
-    android:background="#fff">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:gravity="center"
-        android:text="Número da Mesa?"
-        android:textSize="20dp"
-        android:textStyle="bold" />
+    android:orientation="vertical">
 
     <EditText
-        android:id="@+id/mesa_pedido"
+        android:id="@+id/edt_dialog_cliente"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="16dp"
+        android:layout_margin="8dp"
+        android:ems="10"
         android:gravity="center"
-        android:hint="digite aqui"
+        android:hint="Cliente"
+        android:inputType="textPersonName"
+        android:textSize="15dp" />
+
+    <EditText
+        android:id="@+id/edt_dialog_mesa"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="Mesa"
         android:inputType="number"
-        android:textSize="20dp" />
+        android:textSize="15dp" />
 
 </LinearLayout>

@@ -2,63 +2,99 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#dcdcdc"
-    android:layout_margin="5dp">
+    android:layout_margin="5dp"
+    android:background="#dcdcdc">
 
     <TextView
         android:id="@+id/mesa_adapter_pedido"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:text="Mesa"
-        android:textColor="#000"
+        android:layout_marginBottom="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-         />
+        android:text="Mesa"
+        android:textColor="#000"
+        android:textSize="15dp" />
 
     <TextView
         android:id="@+id/pedido_adapter_pedido"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:text="Descrição"
-        android:textColor="#6e6e6e"
         android:layout_below="@id/mesa_adapter_pedido"
+        android:layout_marginBottom="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-         />
+        android:text="Descrição"
+        android:textColor="#6e6e6e"
+        android:textSize="15dp" />
 
     <TextView
         android:id="@+id/total_adapter_pedido"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:text="Total"
-        android:textColor="#61932f"
         android:layout_below="@id/pedido_adapter_pedido"
+        android:layout_marginBottom="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
+        android:text="Total"
+        android:textColor="#61932f"
+        android:textSize="15dp" />
+
+    <TextView
+        android:id="@+id/data_inicio_adapter_pedido"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/total_adapter_pedido"
         android:layout_marginBottom="5dp"
-        />
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:text="data do pedido"
+        android:textColor="#2a5302"
+        android:textSize="15dp" />
+
+    <TextView
+        android:id="@+id/data_entregue_adapter_pedido"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/data_inicio_adapter_pedido"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:text="Data da entrega"
+        android:textColor="#2a5302"
+        android:textSize="15dp" />
 
     <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@mipmap/ic_enviar_pedido"
         android:id="@+id/status_button"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="5dp"/>
-    <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@mipmap/ic_ok"
-        android:id="@+id/status_button_ok"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
-        android:layout_marginRight="5dp"/>
+        android:background="@mipmap/ic_enviar_pedido" />
+
+    <ImageButton
+        android:id="@+id/status_button_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@mipmap/ic_ok" />
+
+    <ImageButton
+        android:id="@+id/status_button_pagar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@mipmap/ic_pagar" />
 
 </RelativeLayout>

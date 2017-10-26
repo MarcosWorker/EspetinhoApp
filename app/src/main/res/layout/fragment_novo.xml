@@ -38,7 +38,9 @@
             android:layout_marginTop="16dp"
             android:layout_toEndOf="@id/ll"
             android:layout_toRightOf="@id/ll"
-            android:hint="Nome do Espetinho..." />
+            android:hint="Nome do Espetinho..."
+            android:inputType="text"
+            android:textSize="15dp" />
 
         <EditText
             android:id="@+id/edt_preco_novo"
@@ -48,7 +50,9 @@
             android:layout_alignRight="@+id/edt_nome_novo"
             android:layout_below="@+id/edt_nome_novo"
             android:layout_toRightOf="@+id/ll"
-            android:hint="Preço do Espetinho..." />
+            android:hint="Preço do Espetinho..."
+            android:inputType="numberDecimal"
+            android:textSize="15dp" />
 
         <EditText
             android:id="@+id/edt_descricao_novo"
@@ -60,7 +64,9 @@
             android:layout_alignStart="@+id/ll"
             android:layout_below="@+id/edt_preco_novo"
             android:layout_marginTop="16dp"
-            android:hint="Descrição do espetinhoCardapio..." />
+            android:hint="Descrição do espetinhoCardapio..."
+            android:inputType="text"
+            android:textSize="15dp" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_add_novo"

@@ -28,7 +28,6 @@ import java.io.ByteArrayOutputStream;
 
 import br.com.forum.espetinhoapp.R;
 import br.com.forum.espetinhoapp.model.bean.Espetinho;
-import br.com.forum.espetinhoapp.model.bean.EspetinhoCardapio;
 import io.realm.Realm;
 
 import static android.app.Activity.RESULT_OK;
@@ -112,13 +111,13 @@ public class NovoFragment extends Fragment {
                 } else {
                     Number currentIdNum = realm.where(Espetinho.class).max("id");
                     int nextId;
-                    if(currentIdNum == null) {
+                    if (currentIdNum == null) {
                         nextId = 1;
                     } else {
                         nextId = currentIdNum.intValue() + 1;
                     }
                     realm.beginTransaction();
-                    espetinho = realm.createObject(Espetinho.class,nextId);
+                    espetinho = realm.createObject(Espetinho.class, nextId);
                     espetinho.setNome(edtNovoNome.getText().toString());
                     espetinho.setQtd(0);
                     espetinho.setDescricao(edtNovoDescricao.getText().toString());
@@ -127,6 +126,12 @@ public class NovoFragment extends Fragment {
                     realm.commitTransaction();
 
                     Toast.makeText(view.getContext(), "EspetinhoCardapio adicionado com sucesso...", Toast.LENGTH_SHORT).show();
+
+                    edtNovoNome.setText("");
+                    edtNovoDescricao.setText("");
+                    edtNovoPreco.setText("");
+                    imageViewFoto.setImageResource(R.mipmap.ic_foto);
+
                 }
 
             }

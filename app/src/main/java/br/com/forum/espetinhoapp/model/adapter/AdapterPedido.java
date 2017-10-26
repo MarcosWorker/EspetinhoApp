@@ -7,11 +7,12 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+
 import br.com.forum.espetinhoapp.R;
 import br.com.forum.espetinhoapp.model.bean.EspetinhoCardapio;
 import br.com.forum.espetinhoapp.model.bean.Pedido;
 import io.realm.Realm;
-import io.realm.RealmList;
 import io.realm.RealmResults;
 
 /**
@@ -42,13 +43,21 @@ public class AdapterPedido extends RecyclerView.Adapter<AdapterPedido.ViewHolder
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         final Pedido pedido = pedidos.get(position);
-        holder.tvMesa.setText(String.valueOf(pedido.getMesa()));
-        holder.tvTotal.setText(String.valueOf(pedido.getTotal()));
+        holder.tvMesa.setText("Mesa - " + String.valueOf(pedido.getMesa()));
+        holder.tvTotal.setText("Total - R$ " + String.valueOf(pedido.getTotal()));
+        holder.tvDataEntrega.setText(pedido.getDataEntrega());
+        holder.tvDataPedido.setText("Data do pedido : " + pedido.getDataPedido());
         if (pedido.getStatus() == 0) {
             holder.buttonOk.setVisibility(View.INVISIBLE);
+            holder.buttonPagar.setVisibility(View.INVISIBLE);
             holder.button.setVisibility(View.VISIBLE);
-        } else {
+        } else if (pedido.getStatus() == 1) {
+            holder.buttonOk.setVisibility(View.INVISIBLE);
+            holder.buttonPagar.setVisibility(View.VISIBLE);
+            holder.button.setVisibility(View.INVISIBLE);
+        } else if (pedido.getStatus() == 2) {
             holder.buttonOk.setVisibility(View.VISIBLE);
+            holder.buttonPagar.setVisibility(View.INVISIBLE);
             holder.button.setVisibility(View.INVISIBLE);
         }
 
@@ -57,14 +66,29 @@ public class AdapterPedido extends RecyclerView.Adapter<AdapterPedido.ViewHolder
             public void onClick(View v) {
                 realm.beginTransaction();
                 pedido.setStatus(1);
+                java.util.Date agora = new java.util.Date();
+                SimpleDateFormat formata = new SimpleDateFormat("dd/MM/yyyy");
+                String data1 = formata.format(agora);
+                formata = new SimpleDateFormat("hh:mm:ss");
+                String hora1 = formata.format(agora);
+                pedido.setDataEntrega("Data de entrega : " + data1 + " " + hora1);
+                realm.commitTransaction();
+                notifyItemChanged(position);
+            }
+        });
+
+        holder.buttonPagar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                realm.beginTransaction();
+                pedido.setStatus(2);
                 realm.commitTransaction();
                 notifyItemChanged(position);
             }
         });
 
         StringBuilder stringBuilderDescricao = new StringBuilder("Descrição do pedido\n");
-        RealmResults<EspetinhoCardapio> espetinhoCardapios= realm.where(EspetinhoCardapio.class)
-                .equalTo("idPedido",pedido.getId())
+        RealmResults<EspetinhoCardapio> espetinhoCardapios = realm.where(EspetinhoCardapio.class)
                 .findAll();
         for (EspetinhoCardapio espetinhoCardapio : espetinhoCardapios) {
             stringBuilderDescricao.append(espetinhoCardapio.getNome())
@@ -98,18 +122,24 @@ public class AdapterPedido extends RecyclerView.Adapter<AdapterPedido.ViewHolder
 
         private TextView tvMesa = null;
         private TextView tvTotal = null;
+        private TextView tvDataPedido = null;
+        private TextView tvDataEntrega = null;
         private TextView tvDescricao = null;
         private ImageButton button = null;
         private ImageButton buttonOk = null;
+        private ImageButton buttonPagar = null;
 
         public ViewHolder(View v) {
             super(v);
 
             tvMesa = (TextView) v.findViewById(R.id.mesa_adapter_pedido);
             tvTotal = (TextView) v.findViewById(R.id.total_adapter_pedido);
+            tvDataPedido = (TextView) v.findViewById(R.id.data_inicio_adapter_pedido);
+            tvDataEntrega = (TextView) v.findViewById(R.id.data_entregue_adapter_pedido);
             tvDescricao = (TextView) v.findViewById(R.id.pedido_adapter_pedido);
             button = (ImageButton) v.findViewById(R.id.status_button);
             buttonOk = (ImageButton) v.findViewById(R.id.status_button_ok);
+            buttonPagar = (ImageButton) v.findViewById(R.id.status_button_pagar);
 
         }
 
