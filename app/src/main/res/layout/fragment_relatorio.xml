@@ -8,6 +8,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Relatorio em Construção" />
+        android:gravity="center"
+        android:text="Contrate um serviço de Relatório.\n\nFone/WhatsApp - 81 9 87304119
+\n\n Falar com Marcos" />
 
 </FrameLayout>
