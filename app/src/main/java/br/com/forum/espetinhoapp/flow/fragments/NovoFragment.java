@@ -113,41 +113,43 @@ public class NovoFragment extends Fragment {
                     Toast.makeText(view.getContext(), "Por favor insira uma descrição...", Toast.LENGTH_SHORT).show();
                 } else {
 
-                    AlertDialog alertDialog = new AlertDialog.Builder(view.getContext()).create();
-                    alertDialog.setTitle("Alerta");
-                    alertDialog.setMessage("Adicionar esse espetinho?");
-                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
+                    AlertDialog.Builder adb = new AlertDialog.Builder(view.getContext());
+                    adb.setTitle("Adicionar esse espetinho?");
+                    adb.setIcon(android.R.drawable.ic_dialog_alert);
+                    adb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
 
-                                    Number currentIdNum = realm.where(Espetinho.class).max("id");
-                                    int nextId;
-                                    if (currentIdNum == null) {
-                                        nextId = 1;
-                                    } else {
-                                        nextId = currentIdNum.intValue() + 1;
-                                    }
-                                    realm.beginTransaction();
-                                    espetinho = realm.createObject(Espetinho.class, nextId);
-                                    espetinho.setNome(edtNovoNome.getText().toString());
-                                    espetinho.setQtd(0);
-                                    espetinho.setDescricao(edtNovoDescricao.getText().toString());
-                                    espetinho.setFoto(byteArrayFoto);
-                                    espetinho.setPreco(Double.valueOf(edtNovoPreco.getText().toString()));
-                                    realm.commitTransaction();
+                            Number currentIdNum = realm.where(Espetinho.class).max("id");
+                            int nextId;
+                            if (currentIdNum == null) {
+                                nextId = 1;
+                            } else {
+                                nextId = currentIdNum.intValue() + 1;
+                            }
+                            realm.beginTransaction();
+                            espetinho = realm.createObject(Espetinho.class, nextId);
+                            espetinho.setNome(edtNovoNome.getText().toString());
+                            espetinho.setQtd(0);
+                            espetinho.setDescricao(edtNovoDescricao.getText().toString());
+                            espetinho.setFoto(byteArrayFoto);
+                            espetinho.setPreco(Double.valueOf(edtNovoPreco.getText().toString()));
+                            realm.commitTransaction();
 
-                                    edtNovoNome.setText("");
-                                    edtNovoDescricao.setText("");
-                                    edtNovoPreco.setText("");
-                                    byteArrayFoto = null;
-                                    imageViewFoto.setImageResource(R.mipmap.ic_foto);
-                                    dialog.dismiss();
-                                    Toast.makeText(viewTela.getContext(), "Espetinho salvo com sucesso", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                    alertDialog.show();
-                    alertDialog.setCanceledOnTouchOutside(false);
+                            edtNovoNome.setText("");
+                            edtNovoDescricao.setText("");
+                            edtNovoPreco.setText("");
+                            byteArrayFoto = null;
+                            imageViewFoto.setImageResource(R.mipmap.ic_foto);
+                            Toast.makeText(viewTela.getContext(), "Espetinho salvo com sucesso", Toast.LENGTH_SHORT).show();
 
+                        } });
+                    adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+
+                        } });
+                    adb.show();
+                    adb.setCancelable(false);
 
                 }
 
